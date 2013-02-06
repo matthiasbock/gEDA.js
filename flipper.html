@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<style>
+	input.bb	{
+			border:			none;
+			width:			30px;
+			}
+	img.board	{
+			border:			1px solid black;
+			width:			150%;
+			}
+	img.crosshair	{
+			border:			none;
+			position:		absolute;
+			}
+</style>
+<script>
+function clicked(event) {
+	pos_x = event.offsetX;
+	pos_y = event.offsetY;
+	crosshair1.style.left = event.srcElement.offsetLeft+pos_x-crosshair1.width/2;
+	crosshair1.style.top = event.srcElement.offsetTop+pos_y-crosshair1.height/2;
+	crosshair1.style.visibility = 'visible';
+	rx = 1-pos_x/event.srcElement.width;
+	ry = pos_y/event.srcElement.height;
+	if ( event.srcElement == img1 )	{
+		the_other = img2;
+		scroll_y = img1.height*1.1;
+		}
+	else	{
+		the_other = img1;
+		scroll_y = -img2.height*0.7;
+		}
+	crosshair2.style.left	= the_other.offsetLeft+(rx*the_other.width)-crosshair2.width/2;
+	crosshair2.style.top	= the_other.offsetTop+(ry*the_other.height)-crosshair2.height/2;
+	crosshair2.style.visibility = 'visible';
+	scroll_x = 0;
+	if ( pos_x < img1.width/2 )
+		scroll_x = img1.width/2;
+	window.scroll(scroll_x, scroll_y);
+	}
+
+function hide(event) {
+	event.srcElement.style.visibility = 'hidden';
+	}
+</script>
+</head>
+
+<body>
+<!--Bounding box: [<input class=bb id=img1_x_min type=text value="10" />, <input class=bb id=img1_y_min type=text value="10" />] - [<input class=bb id=img1_x_max type=text value="10" />, <input class=bb id=img1_y_max type=text value="10" />]<br/>-->
+<img class=board id="img1" src="Speedport 500V mainboard top.jpg" onclick="clicked(event);" />
+<br/>
+<!--Bounding box: [<input class=bb id=img1_x_min type=text value="10" />, <input class=bb id=img1_y_min type=text value="10" />] - [<input class=bb id=img1_x_max type=text value="10" />, <input class=bb id=img1_y_max type=text value="10" />]<br/>-->
+<img class=board id="img2" src="Speedport 500V mainboard bottom.jpg" onclick="clicked(event);" />
+
+<img class=crosshair id="crosshair1" src="crosshair.svg" onclick="hide(event);" />
+<img class=crosshair id="crosshair2" src="crosshair.svg" onclick="hide(event);" />
+<script>
+img1 = document.getElementById('img1');
+img2 = document.getElementById('img2');
+crosshair1 = document.getElementById('crosshair1');
+crosshair2 = document.getElementById('crosshair2');
+</script>
+</body>
+
+</html>
