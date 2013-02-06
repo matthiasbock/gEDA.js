@@ -1,0 +1,38 @@
+<definition width="430" version="0.22" hotspot_x="215" hotspot_y="75" height="130" type="element" orientation="dyyy">
+    <names>
+        <name lang="en">Toshiba TCD2905D CCD array</name>
+    </names>
+    <informations></informations>
+    <description>
+        <text x="-60.8672" y="-22" size="9" text="Toshiba TCD2905D"/>
+        <text x="-154.781" y="48.3333" size="7" text="12"/>
+        <text x="145.219" y="48.3333" size="7" text="22"/>
+        <text x="-154.781" y="-60.6667" size="7" text="11"/>
+        <text x="147.859" y="-61.6667" size="7" text="1"/>
+        <rect width="377" x="-189" y="-11" antialias="false" height="5" style="line-style:normal;line-weight:normal;filling:black;color:black"/>
+        <rect width="412" x="-205" y="-44" antialias="false" height="71" style="line-style:normal;line-weight:normal;filling:none;color:black"/>
+        <rect width="418" x="-209" y="-48" antialias="false" height="79" style="line-style:normal;line-weight:normal;filling:none;color:black"/>
+        <terminal x="-150" y="-53" orientation="n"/>
+        <terminal x="-120" y="-53" orientation="n"/>
+        <terminal x="-90" y="-53" orientation="n"/>
+        <terminal x="-60" y="-53" orientation="n"/>
+        <terminal x="-30" y="-53" orientation="n"/>
+        <terminal x="0" y="-53" orientation="n"/>
+        <terminal x="30" y="-53" orientation="n"/>
+        <terminal x="60" y="-53" orientation="n"/>
+        <terminal x="90" y="-53" orientation="n"/>
+        <terminal x="120" y="-53" orientation="n"/>
+        <terminal x="150" y="-53" orientation="n"/>
+        <terminal x="-150" y="36" orientation="s"/>
+        <terminal x="-120" y="36" orientation="s"/>
+        <terminal x="-90" y="35" orientation="s"/>
+        <terminal x="-60" y="36" orientation="s"/>
+        <terminal x="-30" y="36" orientation="s"/>
+        <terminal x="0" y="36" orientation="s"/>
+        <terminal x="30" y="36" orientation="s"/>
+        <terminal x="60" y="36" orientation="s"/>
+        <terminal x="90" y="36" orientation="s"/>
+        <terminal x="120" y="36" orientation="s"/>
+        <terminal x="150" y="36" orientation="s"/>
+    </description>
+</definition>
