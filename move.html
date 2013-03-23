@@ -51,13 +51,16 @@ function onMouseUp(evt){
    }
 
 function doUpdate(){
-   myCirc.setAttributeNS(null, "cx", newP.x-relX );
-   myCirc.setAttributeNS(null, "cy", newP.y-relY );
-   }
+	var step = 20;
+	var x = Math.round((newP.x-relX)/step)*step;
+	myCirc.setAttributeNS(null, "cx", x);
+	var y = Math.round((newP.y-relY)/step)*step;
+	myCirc.setAttributeNS(null, "cy", y);
+	}
 
 // ]]></script>
 
-<rect id="background" style="fill: #ffffdd" x="0" y="0" width="300" height="200" />
+<rect id="background" style="fill: #ffffdd" x="0" y="0" width="300" height="200" onmousemove="onMouseMove(evt)" />
 <circle id="mycirc" style="stroke: #cc3333; stroke-width: 2; fill: #bbeeff; cursor:move;" cx="150" cy="100" r="25"
 	onmousedown="onMouseDown(evt)"
 	onmousemove="onMouseMove(evt)"
