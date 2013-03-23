@@ -9,8 +9,10 @@ Elements are designed as SVG e.g. in Inkscape, or using pixel formats like PNG o
 You can drag'n'drop elements on the canvas, arrange them,
 inter-connect them and export your schematic in SVG format.
 
-Prototype is the C/C++ based gEDA project. Also the gEDA/gaf (*.sch, *.sym) file formats shall be supported.
-Includes tools to import elements from QElectroTech.
-Tools to auto-layout and prepare proto-board milling shall be developed.
+Prototype is the C/C++ based gEDA project.
+Also the gEDA/gaf (*.sch, *.sym) file formats shall be supported for import/export.
+Includes tools to import elements from QElectroTech project.
+Tools to auto-layout and export G-Code for board milling (CNC) machines
+as well as pick'n'place (board populating) machines shall be developed.
 
 Contributors/contributions welcome!
