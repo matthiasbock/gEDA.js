@@ -1,0 +1,75 @@
+<!-- Example from http://www.maa.org/joma/volume7/lane/developer.html -->
+
+<html>
+
+<body>
+<svg id="svg" xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ width="300" height="200"
+ onload="Init( evt )" >
+
+<script type="text/ecmascript">
+   //<![CDATA[
+
+var svgRoot;
+var newP;
+var bmousedown=0;
+var myCirc;
+var relX, relY;
+
+function Init(){
+   svgRoot = document.getElementById('svg');
+   newP = svgRoot.createSVGPoint();
+   myCirc = document.getElementById("mycirc");
+   }
+
+function getMouse(evt){
+   var position = svgRoot.createSVGPoint();
+   position.x = evt.clientX;
+   position.y = evt.clientY;
+   return position;
+   }
+
+function onMouseDown(evt){
+	delete newP;
+	newP=getMouse(evt);
+	bmousedown=1;
+	relX = newP.x - myCirc.getAttributeNS(null, "cx");
+	relY = newP.y - myCirc.getAttributeNS(null, "cy");
+//	doUpdate();
+   }
+
+function onMouseMove(evt){
+   if(bmousedown){
+       newP=getMouse(evt);
+       doUpdate();
+       }
+   }
+
+function onMouseUp(evt){
+   bmousedown=0;
+   }
+
+function doUpdate(){
+   myCirc.setAttributeNS(null, "cx", newP.x-relX );
+   myCirc.setAttributeNS(null, "cy", newP.y-relY );
+   }
+
+// ]]></script>
+
+<rect id="background" style="fill: #ffffdd" x="0" y="0" width="300" height="200" />
+<circle id="mycirc" style="stroke: #cc3333; stroke-width: 2; fill: #bbeeff; cursor:move;" cx="150" cy="100" r="25"
+	onmousedown="onMouseDown(evt)"
+	onmousemove="onMouseMove(evt)"
+	onmouseup="onMouseUp(evt)"
+	/>
+<!--rect id="canvas" x="0" y="0" width="300" height="200" opacity="0"
+   pointer-events="visible"
+   onmousedown="onMouseDown(evt)"
+   onmousemove="onMouseMove(evt)"
+   onmouseup="onMouseUp(evt)"/-->
+
+</svg>
+</body>
+
+</html>
