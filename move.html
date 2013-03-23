@@ -5,7 +5,7 @@
 <body>
 <svg id="svg" xmlns="http://www.w3.org/2000/svg"
  xmlns:xlink="http://www.w3.org/1999/xlink"
- width="300" height="200"
+ width="800" height="600"
  onload="Init( evt )" >
 
 <script type="text/ecmascript">
@@ -16,6 +16,7 @@ var newP;
 var bmousedown=0;
 var myCirc;
 var relX, relY;
+var gridWidth = 20;
 
 function Init(){
    svgRoot = document.getElementById('svg');
@@ -51,22 +52,21 @@ function onMouseUp(evt){
    }
 
 function doUpdate(){
-	var step = 20;
-	var x = Math.round((newP.x-relX)/step)*step;
+	var x = Math.round((newP.x-relX)/gridWidth)*gridWidth;
 	myCirc.setAttributeNS(null, "cx", x);
-	var y = Math.round((newP.y-relY)/step)*step;
+	var y = Math.round((newP.y-relY)/gridWidth)*gridWidth;
 	myCirc.setAttributeNS(null, "cy", y);
 	}
 
 // ]]></script>
 
-<rect id="background" style="fill: #ffffdd" x="0" y="0" width="300" height="200" onmousemove="onMouseMove(evt)" />
+<rect id="background" style="fill: #ffffdd" x="0" y="0" width="800" height="600" onmousemove="onMouseMove(evt)" />
 <circle id="mycirc" style="stroke: #cc3333; stroke-width: 2; fill: #bbeeff; cursor:move;" cx="150" cy="100" r="25"
 	onmousedown="onMouseDown(evt)"
 	onmousemove="onMouseMove(evt)"
 	onmouseup="onMouseUp(evt)"
 	/>
-<!--rect id="canvas" x="0" y="0" width="300" height="200" opacity="0"
+<!--rect id="canvas" x="0" y="0" width="800" height="600" opacity="0"
    pointer-events="visible"
    onmousedown="onMouseDown(evt)"
    onmousemove="onMouseMove(evt)"
