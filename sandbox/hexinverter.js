@@ -6,8 +6,12 @@ HexInverter14 = function() {
 	this.terminals = {};
 	this.terminals[14] = new Terminal(VCC, 5 * Volt);
 	this.terminals[7]   = new Terminal(GND, 0 * Volt);
-	[1, 3, 5, 9, 11, 13].forEach( function(element, index, array) { this.terminals[element] = new Terminal(INPUT, LOW); } );
-	[2, 4, 6, 8, 10, 12].forEach( function(element, index, array) { this.terminals[element] = new Terminal(OUTPUT, HIGH); } );
+
+	this.terminals[1] = new Terminal(INPUT, LOW);
+	this.terminals[2] = new Terminal(OUTPUT, HIGH);
+	
+//	[1, 3, 5, 9, 11, 13].forEach( function(element, index, array) { setup(element, INPUT, LOW); } );
+//	[2, 4, 6, 8, 10, 12].forEach( function(element, index, array) { this.terminals[element] = new Terminal(OUTPUT, HIGH); } );
 
 	// possibility to setup a hysterese (Schmitt-Trigger)
 	var HIGH_TO_LOW = LOW_TO_HIGH = 2.5 * Volt;

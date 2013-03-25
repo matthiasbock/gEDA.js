@@ -12,8 +12,10 @@ var mV = 0.001;
 var LOW = 0 * Volt;
 var HIGH = 5 * Volt;
 
-Terminal = function(role=NOT_CONNECTED, level=LOW, svg=null) {
+Terminal = function(role, level, svg) {
+	if (role == null)	role = NOT_CONNECTED;
 	this.role = role;
+	if (level == null)	level = LOW;
 	this.level = level;
 	this.SVGElement = svg;
 	}
