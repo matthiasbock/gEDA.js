@@ -3,79 +3,38 @@
 HexInverter14 = function() {
 
 	// init IC terminals
-	var terminals = {};
-	terminals[14] = new Terminal(VCC, 5 * Volt);
-	terminals[7]   = new Terminal(GND, 0 * Volt);
-	[1, 3, 5, 9, 11, 13].forEach( function(element, index, array) { terminals[element] = new Terminal(INPUT, LOW); } );
-	[2, 4, 6, 8, 10, 12].forEach( function(element, index, array) { terminals[element] = new Terminal(OUTPUT, HIGH); } );
+	this.terminals = {};
+	this.terminals[14] = new Terminal(VCC, 5 * Volt);
+	this.terminals[7]   = new Terminal(GND, 0 * Volt);
+	[1, 3, 5, 9, 11, 13].forEach( function(element, index, array) { this.terminals[element] = new Terminal(INPUT, LOW); } );
+	[2, 4, 6, 8, 10, 12].forEach( function(element, index, array) { this.terminals[element] = new Terminal(OUTPUT, HIGH); } );
 
-	// possibility for hysterese (e.g. Schmitt-Trigger)
+	// possibility to setup a hysterese (Schmitt-Trigger)
 	var HIGH_TO_LOW = LOW_TO_HIGH = 2.5 * Volt;
 		
 	invert = function(currentOutputLevel, inputLevel) {
-		var VCC = this.level[14]-this.level[7];
-
-		if (VCC < 3*Volt || VCC > 15*Volt) // inactive or destroyed; null = disconnected
+		// IC is powered ?
+		var VCC = this.terminals[14].level-this.terminals[7].level;
+		// not powered or destroyed by overvoltage
+		if (VCC < 3 * Volt || VCC > 15 * Volt)
 			return NOT_CONNECTED;
 
 		if (currentOutputLevel == LOW && inputLevel >= this.LOW_TO_HIGH)	// input = HIGH
 			return LOW
 		else
-		if (currentOutputLevel == HIGH && inputLevel <= this.HIGH_TO_LOW)	// input = LOW
+		if (currentOutputLevel == HIGH && inputLevel < this.HIGH_TO_LOW)	// input = LOW
 			return HIGH
 		else
 			return currentOutputLevel;
 		}
 
 	update = function(event) {
-		this.level[2] = this.invert(this.level[2], this.level[3]);
-		this.level[4] = this.invert(this.level[4], this.level[5]);
-		this.level[6] = this.invert(this.level[6], this.level[7]);
-		this.level[10] = this.invert(this.level[10], this.level[9]);
-		this.level[12] = this.invert(this.level[12], this.level[11]);
-		this.level[15] = this.invert(this.level[15], this.level[14]);
+		// invert all input terminal levels and set output terminal level appropriately
+		this.terminals[2].level = this.invert(this.terminals[2].level, this.terminals[3].level);
+		this.terminals[4].level = this.invert(this.terminals[4].level, this.terminals[5].level);
+		this.terminals[6].level = this.invert(this.terminals[6].level, this.terminals[7].level);
+		this.terminals[10].level = this.invert(this.terminals[10].level, this.terminals[9].level);
+		this.terminals[12].level = this.invert(this.terminals[12].level, this.terminals[11].level);
+		this.terminals[15].level = this.invert(this.terminals[15].level, this.terminals[14].level);
 		}
 	}
-
-HexInverter16 = {
-	// init terminal functions
-	var role = {};
-	role[1] = VCC;
-	role[8] = GND;
-	role[2] = OUTPUT;
-	role[3] = INPUT;
-
-	// init levels
-	var level = {};
-	level[1] = 5 * Volt; // switched on
-	level[8] = 0 * Volt;
-	level[3] = LOW;
-	level[2] = HIGH;
-
-	var HIGH_TO_LOW = LOW_TO_HIGH = 2.5 * Volt;
-		
-	invert = function(currentOutputLevel, inputLevel) {
-		var VCC = this.level[1]-this.level[8];
-
-		if (VCC < 3*Volt || VCC > 15*Volt) // inactive or destroyed; null = disconnected
-			return NOT_CONNECTED;
-
-		if (currentOutputLevel == LOW && inputLevel >= this.LOW_TO_HIGH)	// input = HIGH
-			return LOW
-		else
-		if (currentOutputLevel == HIGH && inputLevel <= this.HIGH_TO_LOW)	// input = LOW
-			return HIGH
-		else
-			return currentOutputLevel; // hysterese (e.g. Schmitt-Trigger)
-		}
-
-	update = function(event) {
-		this.level[2] = this.invert(this.level[2], this.level[3]);
-		this.level[4] = this.invert(this.level[4], this.level[5]);
-		this.level[6] = this.invert(this.level[6], this.level[7]);
-		this.level[10] = this.invert(this.level[10], this.level[9]);
-		this.level[12] = this.invert(this.level[12], this.level[11]);
-		this.level[15] = this.invert(this.level[15], this.level[14]);
-		}
-	}
-
