@@ -2,43 +2,14 @@
 
 HexInverter14 = function() {
 
+	// init IC terminals
 	var terminals = {};
+	terminals[14] = new Terminal(VCC, 5 * Volt);
+	terminals[7]   = new Terminal(GND, 0 * Volt);
+	[1, 3, 5, 9, 11, 13].forEach( function(element, index, array) { terminals[element] = new Terminal(INPUT, LOW); } );
+	[2, 4, 6, 8, 10, 12].forEach( function(element, index, array) { terminals[element] = new Terminal(OUTPUT, HIGH); } );
 
-	[1, 3, 5, 9 11, 13].forEach( function(element, index, array) { terminals[element] = new Terminal(INPUT, LOW); } );
-		
-	terminals[14].role = VCC;
-		...
-		role = VCC;
-		level[14] = 5 * Volt;
-		role[7] = GND;
-		level[7] = 0 * Volt;
-
-		role[01] = INPUT;
-		role[03] = INPUT;
-		role[05] = INPUT;
-		role[09] = INPUT;
-		role[11] = INPUT;
-		role[13] = INPUT;
-		level[01] = LOW;
-		level[03] = LOW;
-		level[05] = LOW;
-		level[09] = LOW;
-		level[11] = LOW;
-		level[13] = LOW;
-		role[02] = OUTPUT;
-		role[04] = OUTPUT;
-		role[06] = OUTPUT;
-		role[08] = OUTPUT;
-		role[10] = OUTPUT;
-		role[12] = OUTPUT;
-		level[02] = HIGH;
-		level[04] = HIGH;
-		level[06] = HIGH;
-		level[08] = HIGH;
-		level[10] = HIGH;
-		level[12] = HIGH;
-		}
-
+	// possibility for hysterese (e.g. Schmitt-Trigger)
 	var HIGH_TO_LOW = LOW_TO_HIGH = 2.5 * Volt;
 		
 	invert = function(currentOutputLevel, inputLevel) {
@@ -53,7 +24,7 @@ HexInverter14 = function() {
 		if (currentOutputLevel == HIGH && inputLevel <= this.HIGH_TO_LOW)	// input = LOW
 			return HIGH
 		else
-			return currentOutputLevel; // hysterese (e.g. Schmitt-Trigger)
+			return currentOutputLevel;
 		}
 
 	update = function(event) {
