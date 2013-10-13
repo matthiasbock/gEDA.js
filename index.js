@@ -1,0 +1,4 @@
+
+$('body').onload = function() {
+    // ...
+};
