@@ -24,13 +24,13 @@ HexInverter14 = function() {
 			return NOT_CONNECTED;
 
 		if (currentOutputLevel == LOW && inputLevel >= this.LOW_TO_HIGH)	// input = HIGH
-			return LOW
+			return LOW;
 		else
 		if (currentOutputLevel == HIGH && inputLevel < this.HIGH_TO_LOW)	// input = LOW
-			return HIGH
+			return HIGH;
 		else
 			return currentOutputLevel;
-		}
+		};
 
 	update = function(event) {
 		// invert all input terminal levels and set output terminal level appropriately
@@ -40,5 +40,5 @@ HexInverter14 = function() {
 		this.terminals[10].level = this.invert(this.terminals[10].level, this.terminals[9].level);
 		this.terminals[12].level = this.invert(this.terminals[12].level, this.terminals[11].level);
 		this.terminals[15].level = this.invert(this.terminals[15].level, this.terminals[14].level);
-		}
-	}
+		};
+	};

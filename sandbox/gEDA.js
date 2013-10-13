@@ -18,4 +18,5 @@ Terminal = function(role, level, svg) {
 	if (level == null)	level = LOW;
 	this.level = level;
 	this.SVGElement = svg;
-	}
+	};
+
