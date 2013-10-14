@@ -50,11 +50,17 @@ Element = function() {
 };
 
 loadSVG = function(url, idElement, idObject, element) {
-    $('body').append('<object id="'+idObject+'" data="'+url+'" type="image/svg+xml" style="visibility:hidden;"></object>');
+    /*
+    $('body').append('<object id="'+idObject+'" data="'+url+'" type="image/svg+xml" style="width:0px;height:0px;visibility:hidden;"></object>');
     var object = document.getElementById(idObject);
     object.addEventListener('load',
             function() {
-                element.prototype.svg = object.contentDocument.getElementById(idElement);
+                var svg = object.contentDocument.getElementById(idElement);
+                element.svg = svg;
+                console.log(svg);
             }, false);
-
+    */
+    var svg = document.getElementById(idObject).contentDocument.getElementById(idElement);
+    console.log(svg);
+    return svg;
 };

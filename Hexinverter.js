@@ -9,33 +9,21 @@
  * 
 */
 
-var invertLevel = function(currentOutputLevel, inputLevel) {
-    // IC is powered ?
-    var VCC = this.terminals[14].level-this.terminals[7].level;
-    // not powered or destroyed by overvoltage
-    if (VCC < 3 * Volt || VCC > 15 * Volt)
-        return NOT_CONNECTED;
-
-    if (currentOutputLevel == LOW && inputLevel >= this.LOW_TO_HIGH)    // input = HIGH
-        return LOW;
-    else
-    if (currentOutputLevel == HIGH && inputLevel < this.HIGH_TO_LOW)    // input = LOW
-        return HIGH;
-    else
-        return currentOutputLevel;
-    };
-
-    
-    
 Hexinverter = function() {
     
+    // import the SVG for this element
+    this.svg = $('#svg').append( document.getElementById('Hexinverter').contentDocument.getElementById('layer1') );
+    
+    $('#rect2998').css('fill','red');
+    
+    /*
     // init IC terminals
-    this.terminals[14] = new Terminal(VCC, 'VCC', CMOS, 5*Volt, this.svg.terminal14);
-    this.terminals[7]   = new Terminal(GND, 'GND', CMOS, 0*Volt, this.svg.terminal7);
+    this.terminals[14] = new Terminal(VCC, 'VCC', LOGICLEVEL_CMOS, 5*Volt, this.svg.terminal14);
+    this.terminals[7]   = new Terminal(GND, 'GND', LOGICLEVEL_CMOS, 0*Volt, this.svg.terminal7);
     
     this.terminals[1] = new Terminal(INPUT, LOW);
     this.terminals[2] = new Terminal(OUTPUT, HIGH);
-    
+    */
 //    [1, 3, 5, 9, 11, 13].forEach( function(element, index, array) { setup(element, INPUT, LOW); } );
 //    [2, 4, 6, 8, 10, 12].forEach( function(element, index, array) { this.terminals[element] = new Terminal(OUTPUT, HIGH); } );
 };
@@ -45,11 +33,6 @@ Hexinverter.prototype = new Element();
 
 // replace Element contructor
 Hexinverter.prototype.constructor = Hexinverter;
-
-Hexinverter.prototype.loadSVG = function() {
-    loadSVG('Hexinverter.svg', 'layer1', 'Hexinverter', Hexinverter);
-    console.log(this.svg);
-};
 
 Hexinverter.prototype.update = function(event) {
     // invert all input terminal levels and set output terminal level appropriately
