@@ -10,7 +10,13 @@ OUTPUT = 'OUTPUT';
 Volt = 1;
 mV = 0.001;
 
-// logic levels
+/*
+ * Logic levels
+ * 
+ * Read more:
+ * https://de.wikipedia.org/wiki/Logikpegel
+ * https://en.wikipedia.org/wiki/Logic_level
+ */
 LOGICLEVEL_CMOS = 'CMOS';
 LOGILEVEL_TTL = 'TTL';
 
@@ -32,10 +38,23 @@ Terminal = function(role, level, svg) {
  *  Element prototype class
  *  
  *  Parent for all elements, inherits common properties and functions
+ *  
+ *  Read more about OOP with JavaScript:
+ *  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript
  */
 Element = function() {
     
     this.terminals = {};
     this.levelType = LOGICLEVEL_CMOS;
     
+};
+
+loadSVG = function(url, idElement, idObject, element) {
+    $('body').append('<object id="'+idObject+'" data="'+url+'" type="image/svg+xml" style="visibility:hidden;"></object>');
+    var object = document.getElementById(idObject);
+    object.addEventListener('load',
+            function() {
+                element.prototype.svg = object.contentDocument.getElementById(idElement);
+            }, false);
+
 };

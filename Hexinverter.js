@@ -25,9 +25,9 @@ var invertLevel = function(currentOutputLevel, inputLevel) {
         return currentOutputLevel;
     };
 
-HexInverter = function() {
     
-    this.loadFrom = 'Hexinverter.svg';
+    
+Hexinverter = function() {
     
     // init IC terminals
     this.terminals[14] = new Terminal(VCC, 'VCC', CMOS, 5*Volt, this.svg.terminal14);
@@ -46,6 +46,11 @@ Hexinverter.prototype = new Element();
 // replace Element contructor
 Hexinverter.prototype.constructor = Hexinverter;
 
+Hexinverter.prototype.loadSVG = function() {
+    loadSVG('Hexinverter.svg', 'layer1', 'Hexinverter', Hexinverter);
+    console.log(this.svg);
+};
+
 Hexinverter.prototype.update = function(event) {
     // invert all input terminal levels and set output terminal level appropriately
     this.terminals[2].level = this.invert(this.terminals[2].level, this.terminals[3].level);
@@ -55,4 +60,3 @@ Hexinverter.prototype.update = function(event) {
     this.terminals[12].level = this.invert(this.terminals[12].level, this.terminals[11].level);
     this.terminals[15].level = this.invert(this.terminals[15].level, this.terminals[14].level);
 };
-
