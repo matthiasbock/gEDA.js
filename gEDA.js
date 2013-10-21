@@ -43,7 +43,3 @@ circleTerminal = function() {
 pathElement = function() {
     return svg.append('svg:path').attr('class','pathElement');
 };
-
-onTerminalClick = function(terminal) {
-    console.log(terminal.svg.cx.baseVal.value);    
-};

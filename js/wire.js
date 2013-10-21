@@ -14,9 +14,7 @@ Wire = function(debug, randomXY) {
     
     this.path = pathElement();
     this.circleFrom = circleTerminal();
-    this.circleFrom.on('click', this.onCircleFromClick);
     this.circleTo = circleTerminal();
-    this.circleTo.on('click', this.onCircleToClick);
     
     var x = 50;
     var y = 50;
@@ -27,8 +25,8 @@ Wire = function(debug, randomXY) {
     this.setFrom(x,y).setTo(x+50,y);
     
     this.terminals = [];
-    this.terminals.push( new Terminal(debug=this.debug) );
-    this.terminals.push( new Terminal(debug=this.debug) );
+    this.terminals.push( new Terminal(this) );
+    this.terminals.push( new Terminal(this) );
     this.terminals[0].connectTerminal( this.terminals[1] );
     this.terminals[0].hookSVG(this.circleFrom);
     this.terminals[1].hookSVG(this.circleTo);
@@ -81,12 +79,3 @@ Wire.prototype.refresh = function() {
     this.circleTo.attr('cy',this.to.y);
 };
 
-Wire.prototype.onCircleFromClick = function(event) {
-    console.log(event);
-    console.log(this);
-    onTerminalClick(this.terminals[0]);
-};
-
-Wire.prototype.onCircleToClick = function() {
-    onTerminalClick(this.terminals[1]);
-};

@@ -36,6 +36,4 @@ load = function() {
     wire0 = new Wire();
     wire1 = new Wire();
 //    led0 = new LED();
-    
-    global = {selected: null, selectorPath: null};
 };

@@ -16,9 +16,7 @@ Battery = function(debug, randomXY) {
     
     this.path = pathElement();
     this.circlePlus = circleTerminal();
-    this.circlePlus.on('click', onTerminalClick);
     this.circleMinus = circleTerminal();
-    this.circleMinus.on('click', onTerminalClick);
     
     var x = 50;
     var y = 50;
@@ -29,8 +27,8 @@ Battery = function(debug, randomXY) {
     this.setXY(x,y);
     
     this.terminals = [];
-    this.terminals.push( new Terminal(debug=true) );
-    this.terminals.push( new Terminal(debug=true) );
+    this.terminals.push( new Terminal(this) );
+    this.terminals.push( new Terminal(this) );
     this.terminals[0].hookSVG(this.circlePlus);
     this.terminals[1].hookSVG(this.circleMinus);
 };

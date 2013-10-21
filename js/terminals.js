@@ -13,9 +13,10 @@ EAST = 'EAST';
  * Stores voltage
  * Interconnects with other terminals
  */
-Terminal = function(debug) {
+Terminal = function(parent, debug) {
     
-    this.debug = debug ? debug : false;
+    this.parentElement = parent;
+    this.debug = debug ? debug : (parent.debug ? parent.debug : false);
     this.voltage = 0;
     this.connectedTerminals = [];
     this.direction = NORTH;
@@ -83,6 +84,56 @@ Terminal.prototype.disconnectAllTerminals = function() {
     this.connectedTerminals = [];
 };
 
+/*
+ * Define an SVG element that corresponds to this terminal
+ */
 Terminal.prototype.hookSVG = function(element) {
+    
     this.svg = element;
+    
+    /*
+     * Programming a closure for the event function
+     * 
+     * The SVG element throws the event ("this").
+     * Additionally the event itself aswell as
+     * the corresponding terminal object are provided.  
+     */ 
+    var terminal = this;
+    // [0][0] is due to d3 syntax
+    // d3's .on does not provide the proper this, event nor terminal 
+    this.svg[0][0].onclick = function(event) { onTerminalClick.call(event.toElement, event, terminal); };
+};
+
+onTerminalClick = function(event, terminal) {
+    /*
+    console.log(this);
+    console.log(event);
+    console.log(terminal);
+    console.log(terminal.parentElement);
+    */
+    
+    if (typeof selectedTerminal == typeof undefined) {
+        selectedTerminal = terminal;
+        selectionBegin = {x:event.srcElement.cx.baseVal.value, y:event.srcElement.cy.baseVal.value};
+        console.log(selectionBegin);
+        selectionPath = svg.append('svg:path').attr('class','connectTerminalsLine');
+        $('#svg').bind('mousemove', refreshConnectTerminalsLine);
+        $('#svg').bind('keyup', cancelConnectTerminalsLine);
+    } else {
+        selectionEnd = {x:event.x, y:event.y};
+        selectionPath.remove();
+        $('#svg').unbind('movemove');
+        delete selectedTerminal;
+    }
+};
+
+refreshConnectTerminalsLine = function(event) {
+    selectionEnd = {x:event.originalEvent.x-20, y:event.originalEvent.y-20};
+    selectionPath.attr('d','M'+coord(selectionBegin)+' L'+coord(selectionEnd));
+    console.log(coord(selectionEnd));
+};
+
+cancelConnectTerminalsLine = function(event) {
+    console.log(event);
+    console.log(event.originalEvent);
 };

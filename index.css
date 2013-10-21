@@ -24,3 +24,9 @@ svg {
     fill: transparent;
     cursor: move;
 }
+
+.connectTerminalsLine {
+    stroke: gray;
+    fill: transparent;
+    stroke-dasharray: 5,3;
+}
