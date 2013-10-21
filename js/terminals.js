@@ -13,8 +13,9 @@ EAST = 'EAST';
  * Stores voltage
  * Interconnects with other terminals
  */
-Terminal = function() {
+Terminal = function(debug) {
     
+    this.debug = debug ? debug : false;
     this.voltage = 0;
     this.connectedTerminals = [];
     this.direction = NORTH;
@@ -28,11 +29,14 @@ Terminal = function() {
 Terminal.prototype.setVoltage = function(V) {
     
     if (V != this.voltage) {
+        if (this.debug)
+            console.log('setVoltage('+V+');');
         this.voltage = V;
         for (var i=0; i<this.connectedTerminals.length; i++) {
             this.connectedTerminals[i].setVoltage(V);
         }
-    }
+    } else if (this.debug)
+        console.log('setVoltage('+V+'): Ignored, terminal voltage already equals '+V+'.');
 };
 
 /*
@@ -42,9 +46,12 @@ Terminal.prototype.setVoltage = function(V) {
 Terminal.prototype.connectTerminal = function(T) {
     
     if (this.connectedTerminals.indexOf(T) < 0) {
+        if (this.debug)
+            console.log('connectTerminal(T);');
         this.connectedTerminals.push(T);
         T.connectTerminal(this);
-    }
+    } else if (this.debug)
+        console.log('connectTerminal(T): Ignored, terminal is already connected.');
 };
 
 /*
@@ -53,10 +60,13 @@ Terminal.prototype.connectTerminal = function(T) {
  */
 Terminal.prototype.disconnectTerminal = function(T) {
     
-    if (this.connectedTerminals.indexOf(T) < 0) {
+    if (this.connectedTerminals.indexOf(T) > -1) {
+        if (this.debug)
+            console.log('disconnectTerminal(T);');
         this.connectedTerminals.splice(this.connectedTerminals.indexOf(T), 1);
         T.disconnectTerminal(this);
-    }
+    } else if (this.debug)
+        console.log('disconnectTerminal(T): Ignored, this terminal is not connected.');
 };
 
 /*

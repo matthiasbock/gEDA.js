@@ -8,3 +8,12 @@ svg {
     height: 90%;
     border: 1px dashed gray;
 }
+
+.circleTerminal:hover {
+    fill: green;
+    cursor: pointer;
+}
+
+path {
+    cursor: move;
+}

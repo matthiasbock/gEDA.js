@@ -35,3 +35,7 @@ loadSVG = function(url, idElement, idObject, element) {
 coord = function(point) {
     return point.x+','+point.y;
 };
+
+circleTerminal = function() {
+    return svg.append('svg:circle').attr('class','circleTerminal').attr('stroke','black').attr('fill','white').attr('r','5');
+};

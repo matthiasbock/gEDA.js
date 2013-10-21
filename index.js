@@ -26,13 +26,14 @@ $.extend({
 
 $.getScript('js/terminals.js');
 $.getScript('js/wire.js');
+$.getScript('js/battery.js');
 
 load = function() {
     
     svg = d3.select("body").append("svg:svg").attr('id', 'svg');
     
-    wire = new Wire();
-    wire.setFrom(100,200);
-    
-    $('#svg').bind('click', function(event) {wire.setTo(event.clientX, event.clientY);});
+    battery0 = new Battery();
+    wire0 = new Wire();
+    wire1 = new Wire();
+//    led0 = new LED();
 };

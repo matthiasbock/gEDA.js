@@ -3,41 +3,68 @@
  * Simplest element: a wire
  * 
  * one line
- * two ends
+ * two ends: From, To
  * two terminals
  */
 
-Wire = function() {
+Wire = function(debug, randomXY) {
+    
+    this.debug = debug ? debug : false;
+    randomXY = randomXY ? randomXY : true;
     
     this.path = svg.append('svg:path').attr('stroke','black').attr('fill','transparent');
-    this.circleFrom = svg.append('svg:circle').attr('stroke','black').attr('fill','white').attr('r','5');
-    this.circleTo = svg.append('svg:circle').attr('stroke','black').attr('fill','white').attr('r','5');
-    this.from = this.to = {x:0,y:0};
-    this.setFrom(50,50);
-    this.setTo(100,50);
-    this.refresh();
+    this.circleFrom = circleTerminal();
+    this.circleTo = circleTerminal();
+    
+    var x = 50;
+    var y = 50;
+    if (randomXY) {
+        x = Math.random()*(parseInt($('#svg').css('width'))-50);
+        y = Math.random()*(parseInt($('#svg').css('height'))-10);
+    }
+    this.setFrom(x,y).setTo(x+50,y);
     
     this.terminals = [];
-    this.terminals.push( new Terminal() );
-    this.terminals.push( new Terminal() );
+    this.terminals.push( new Terminal(debug=this.debug) );
+    this.terminals.push( new Terminal(debug=this.debug) );
     this.terminals[0].connectTerminal( this.terminals[1] );
     
 };
 
+/*
+ * Set SVG coordinates of "From" terminal
+ * and invoke "refresh"
+ */
 Wire.prototype.setFrom = function(x, y) {
-    this.from = {x:x, y:y};
+    if (y == undefined)
+        this.from = x;
+    else
+        this.from = {x:x, y:y};
     this.refresh();
     return this;
 };
 
+/*
+ * Set SVG coordinates of "To" terminal
+ * and invoke "refresh"
+ */
 Wire.prototype.setTo = function(x, y) {
-    this.to = {x:x, y:y};
+    if (y == undefined)
+        this.to = x;
+    else
+        this.to = {x:x, y:y};
     this.refresh();
     return this;
 };
 
+/*
+ * Redraw the wire's SVG
+ */
 Wire.prototype.refresh = function() {
-
+    
+    if (this.from == undefined || this.to == undefined)
+        return;
+    
     if (this.from.x == this.to.x || this.from.y == this.to.y) {
         this.path.attr('d','M'+coord(this.from)+' L'+coord(this.to));
     } else {
