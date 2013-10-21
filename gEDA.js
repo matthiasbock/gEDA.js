@@ -31,3 +31,7 @@ loadSVG = function(url, idElement, idObject, element) {
     console.log(svg);
     return svg;
 };
+
+coord = function(point) {
+    return point.x+','+point.y;
+};

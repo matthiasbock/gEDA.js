@@ -31,6 +31,8 @@ load = function() {
     
     svg = d3.select("body").append("svg:svg").attr('id', 'svg');
     
-    ic = new Wire();
+    wire = new Wire();
+    wire.setFrom(100,200);
     
+    $('#svg').bind('click', function(event) {wire.setTo(event.clientX, event.clientY);});
 };
