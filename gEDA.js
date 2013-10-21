@@ -36,3 +36,22 @@ loadSVG = function(url, idElement, idObject, element) {
     console.log(svg);
     return svg;
 };
+
+
+$.ajaxSetup({
+    cache: true,
+    beforeSend: function (xhr) {
+        xhr.overrideMimeType("text/javascript");
+    }
+});
+
+$.getScript("include/jquery.simulate.js");
+
+$.ajaxSetup({
+    beforeSend: null
+});
+
+<script src="elements.js"></script>
+<script src="terminals.js"></script>
+<script src="wire.js"></script>
+<script src="hexinverter.js"></script>
