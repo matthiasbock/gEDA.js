@@ -145,7 +145,7 @@ onTerminalClick = function(event, terminal) {
  * Dashed line shall follow mouse move
  */
 refreshConnectTerminalsLine = function(event) {
-    selection.end = {x:event.originalEvent.x-23, y:event.originalEvent.y-23};
+    selection.end = {x:event.originalEvent.x-$('#svg')[0].offsetLeft-2, y:event.originalEvent.y-$('#svg')[0].offsetTop-2};
     selection.path.attr('d','M'+coord(selection.begin)+' L'+coord(selection.end));
     //console.log(coord(selection.end));
 };

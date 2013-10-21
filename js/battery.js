@@ -23,7 +23,7 @@ Battery = function(parentSchematic, debug, randomXY) {
     var x = 50;
     var y = 50;
     if (randomXY) {
-        x = Math.random()*(parseInt($('#svg').css('width'))-50);
+        x = Math.random()*(parseInt($('#svg').css('width'))-80)+40;
         y = (Math.random()*(parseInt($('#svg').css('height'))-80))+40;
     }
     this.setXY(x,y);
