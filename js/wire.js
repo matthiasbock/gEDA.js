@@ -39,7 +39,7 @@ Wire = function(parentSchematic, debug, randomXY) {
  * and invoke "refresh"
  */
 Wire.prototype.setFrom = function(x, y) {
-    if (y == undefined)
+    if (typeof y == 'undefined')
         this.from = x;
     else
         this.from = {x:x, y:y};
@@ -52,7 +52,7 @@ Wire.prototype.setFrom = function(x, y) {
  * and invoke "refresh"
  */
 Wire.prototype.setTo = function(x, y) {
-    if (y == undefined)
+    if (typeof y == 'undefined')
         this.to = x;
     else
         this.to = {x:x, y:y};

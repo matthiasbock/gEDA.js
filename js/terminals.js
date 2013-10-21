@@ -104,6 +104,10 @@ Terminal.prototype.hookSVG = function(element) {
     this.svg[0][0].onclick = function(event) { onTerminalClick.call(event.toElement, event, terminal); };
 };
 
+Terminal.prototype.getXY = function() {
+    return {x:this.svg[0][0].cx.baseVal.value, y:this.svg[0][0].cy.baseVal.value};
+};
+
 onTerminalClick = function(event, terminal) {
     /*
     console.log(this);
@@ -112,21 +116,29 @@ onTerminalClick = function(event, terminal) {
     console.log(terminal.parentElement);
     */
     
+    var schematic = terminal.parentElement.parentSchematic;
     if (typeof selection === 'undefined') {
         selection = {
-            begin: {x:event.srcElement.cx.baseVal.value, y:event.srcElement.cy.baseVal.value},
+            begin: terminal.getXY(),
             beginTerminal: terminal,
-            path: terminal.parentElement.parentSchematic.svg.append('svg:path').attr('class','connectTerminalsLine')
+            path: schematic.svg.append('svg:path').attr('class','connectTerminalsLine'),
         };
         $('#svg').bind('mousemove', refreshConnectTerminalsLine);
         $('#svg').bind('keyup', cancelConnectTerminalsLine);
     } else {
         selection.endTerminal = terminal;
-        selection.beginTerminal.connectTerminal( selection.endTerminal );
+        
+        var wire = new Wire(schematic);
+        wire.setFrom( selection.beginTerminal.getXY() );
+        wire.setTo( selection.endTerminal.getXY() );
+        selection.beginTerminal.connectTerminal( wire.terminals[0] );
+        selection.endTerminal.connectTerminal( wire.terminals[1] );
+        console.log(schematic);
+        
         selection.path.remove();
         $('#svg').unbind('movemove');
         delete selection;
-    }
+    };
 };
 
 refreshConnectTerminalsLine = function(event) {
