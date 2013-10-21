@@ -81,7 +81,8 @@ Wire.prototype.refresh = function() {
     this.circleTo.attr('cy',this.to.y);
 };
 
-Wire.prototype.onCircleFromClick = function() {
+Wire.prototype.onCircleFromClick = function(event) {
+    console.log(event);
     console.log(this);
     onTerminalClick(this.terminals[0]);
 };
