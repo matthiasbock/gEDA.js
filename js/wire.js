@@ -12,9 +12,11 @@ Wire = function(debug, randomXY) {
     this.debug = debug ? debug : false;
     randomXY = randomXY ? randomXY : true;
     
-    this.path = svg.append('svg:path').attr('stroke','black').attr('fill','transparent');
+    this.path = pathElement();
     this.circleFrom = circleTerminal();
+    this.circleFrom.on('click', this.onCircleFromClick);
     this.circleTo = circleTerminal();
+    this.circleTo.on('click', this.onCircleToClick);
     
     var x = 50;
     var y = 50;
@@ -28,7 +30,8 @@ Wire = function(debug, randomXY) {
     this.terminals.push( new Terminal(debug=this.debug) );
     this.terminals.push( new Terminal(debug=this.debug) );
     this.terminals[0].connectTerminal( this.terminals[1] );
-    
+    this.terminals[0].hookSVG(this.circleFrom);
+    this.terminals[1].hookSVG(this.circleTo);
 };
 
 /*
@@ -76,4 +79,13 @@ Wire.prototype.refresh = function() {
     this.circleFrom.attr('cy',this.from.y);
     this.circleTo.attr('cx',this.to.x);
     this.circleTo.attr('cy',this.to.y);
+};
+
+Wire.prototype.onCircleFromClick = function() {
+    console.log(this);
+    onTerminalClick(this.terminals[0]);
+};
+
+Wire.prototype.onCircleToClick = function() {
+    onTerminalClick(this.terminals[1]);
 };

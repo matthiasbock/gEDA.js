@@ -9,11 +9,18 @@ svg {
     border: 1px dashed gray;
 }
 
+.circleTerminal {
+    stroke: black;
+    fill: white;
+}
+
 .circleTerminal:hover {
     fill: green;
     cursor: pointer;
 }
 
-path {
+.pathElement {
+    stroke: black;
+    fill: transparent;
     cursor: move;
 }

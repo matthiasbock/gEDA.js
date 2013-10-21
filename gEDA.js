@@ -37,5 +37,13 @@ coord = function(point) {
 };
 
 circleTerminal = function() {
-    return svg.append('svg:circle').attr('class','circleTerminal').attr('stroke','black').attr('fill','white').attr('r','5');
+    return svg.append('svg:circle').attr('class','circleTerminal').attr('r','5');
+};
+
+pathElement = function() {
+    return svg.append('svg:path').attr('class','pathElement');
+};
+
+onTerminalClick = function(terminal) {
+    console.log(terminal.svg.cx.baseVal.value);    
 };

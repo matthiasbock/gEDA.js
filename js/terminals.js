@@ -82,3 +82,7 @@ Terminal.prototype.disconnectAllTerminals = function() {
     // should already be empty here, just to make sure
     this.connectedTerminals = [];
 };
+
+Terminal.prototype.hookSVG = function(element) {
+    this.svg = element;
+};
