@@ -4,12 +4,11 @@
 <script src="include/jquery.js"></script>
 <script src="include/d3.v3.js"></script>
 <script src="gEDA.js"></script>
-<script src="index.js"></script>
 <link rel="stylesheet" type="text/css" href="index.css"/>
 </head>
 
-<body onload="load();">
-<!-- object id="hexinverter" data="svg/hexinverter.svg" type="image/svg+xml" style="width:0px;height:0px;visibility:hidden;"></object-->
+<body onload="schematic = new Schematic(d3.select('body'), debug=true);">
+<input type=button value="New battery" onclick="new Battery(schematic);"/>
 </body>
 
 </html>

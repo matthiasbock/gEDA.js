@@ -1,4 +1,9 @@
 
+/*
+ * The schematic object stores a list of elements
+ * and a link to the main SVG canvas
+ */
+
 Schematic = function(d3_parent, debug) {
     
     this.debug = debug ? debug : false;

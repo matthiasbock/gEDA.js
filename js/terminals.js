@@ -141,6 +141,9 @@ onTerminalClick = function(event, terminal) {
     };
 };
 
+/*
+ * Dashed line shall follow mouse move
+ */
 refreshConnectTerminalsLine = function(event) {
     selection.end = {x:event.originalEvent.x-23, y:event.originalEvent.y-23};
     selection.path.attr('d','M'+coord(selection.begin)+' L'+coord(selection.end));
