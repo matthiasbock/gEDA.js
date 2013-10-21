@@ -71,7 +71,12 @@ Wire.prototype.refresh = function() {
     if (this.from.x == this.to.x || this.from.y == this.to.y) {
         this.path.attr('d','M'+coord(this.from)+' L'+coord(this.to));
     } else {
-        var a = {x:this.to.x, y:this.from.y};
+        // go the long way first
+        var a;
+        if (Math.abs(this.to.x-this.from.x) > Math.abs(this.to.y-this.from.y))
+            a = {x:this.to.x, y:this.from.y};
+        else
+            a = {x:this.from.x, y:this.to.y};
         this.path.attr('d','M'+coord(this.from)+' L'+coord(a)+' L'+coord(this.to));
     }
     
