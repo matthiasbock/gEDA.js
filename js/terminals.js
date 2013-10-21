@@ -13,10 +13,10 @@ EAST = 'EAST';
  * Stores voltage
  * Interconnects with other terminals
  */
-Terminal = function(parent, debug) {
+Terminal = function(parentElement, debug) {
     
-    this.parentElement = parent;
-    this.debug = debug ? debug : (parent.debug ? parent.debug : false);
+    this.parentElement = parentElement;
+    this.debug = debug ? debug : (this.parentElement.debug ? this.parentElement.debug : false);
     this.voltage = 0;
     this.connectedTerminals = [];
     this.direction = NORTH;
@@ -112,25 +112,27 @@ onTerminalClick = function(event, terminal) {
     console.log(terminal.parentElement);
     */
     
-    if (typeof selectedTerminal == typeof undefined) {
-        selectedTerminal = terminal;
-        selectionBegin = {x:event.srcElement.cx.baseVal.value, y:event.srcElement.cy.baseVal.value};
-        console.log(selectionBegin);
-        selectionPath = svg.append('svg:path').attr('class','connectTerminalsLine');
+    if (typeof selection === 'undefined') {
+        selection = {
+            begin: {x:event.srcElement.cx.baseVal.value, y:event.srcElement.cy.baseVal.value},
+            beginTerminal: terminal,
+            path: terminal.parentElement.parentSchematic.svg.append('svg:path').attr('class','connectTerminalsLine')
+        };
         $('#svg').bind('mousemove', refreshConnectTerminalsLine);
         $('#svg').bind('keyup', cancelConnectTerminalsLine);
     } else {
-        selectionEnd = {x:event.x, y:event.y};
-        selectionPath.remove();
+        selection.endTerminal = terminal;
+        selection.beginTerminal.connectTerminal( selection.endTerminal );
+        selection.path.remove();
         $('#svg').unbind('movemove');
-        delete selectedTerminal;
+        delete selection;
     }
 };
 
 refreshConnectTerminalsLine = function(event) {
-    selectionEnd = {x:event.originalEvent.x-20, y:event.originalEvent.y-20};
-    selectionPath.attr('d','M'+coord(selectionBegin)+' L'+coord(selectionEnd));
-    console.log(coord(selectionEnd));
+    selection.end = {x:event.originalEvent.x-23, y:event.originalEvent.y-23};
+    selection.path.attr('d','M'+coord(selection.begin)+' L'+coord(selection.end));
+    //console.log(coord(selection.end));
 };
 
 cancelConnectTerminalsLine = function(event) {

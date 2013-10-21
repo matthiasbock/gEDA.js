@@ -7,16 +7,18 @@
  * two terminals
  */
 
-Battery = function(debug, randomXY) {
+Battery = function(parentSchematic, debug, randomXY) {
     
-    this.debug = debug ? debug : false;
+    this.parentSchematic = parentSchematic;
+    this.parentSchematic.append(this);
+    this.debug = debug ? debug : (this.parentSchematic.debug ? this.parentSchematic.debug : false);
     randomXY = randomXY ? randomXY : true;
     
     this.voltage = 0;
     
-    this.path = pathElement();
-    this.circlePlus = circleTerminal();
-    this.circleMinus = circleTerminal();
+    this.path = this.parentSchematic.newPathElement();
+    this.circlePlus = this.parentSchematic.newCircleTerminal();
+    this.circleMinus = this.parentSchematic.newCircleTerminal();
     
     var x = 50;
     var y = 50;

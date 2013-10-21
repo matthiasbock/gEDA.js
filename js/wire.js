@@ -7,14 +7,16 @@
  * two terminals
  */
 
-Wire = function(debug, randomXY) {
+Wire = function(parentSchematic, debug, randomXY) {
     
-    this.debug = debug ? debug : false;
+    this.parentSchematic = parentSchematic;
+    this.parentSchematic.append(this);
+    this.debug = debug ? debug : (this.parentSchematic.debug ? this.parentSchematic.debug : false);
     randomXY = randomXY ? randomXY : true;
     
-    this.path = pathElement();
-    this.circleFrom = circleTerminal();
-    this.circleTo = circleTerminal();
+    this.path = this.parentSchematic.newPathElement();
+    this.circleFrom = this.parentSchematic.newCircleTerminal();
+    this.circleTo = this.parentSchematic.newCircleTerminal();
     
     var x = 50;
     var y = 50;
