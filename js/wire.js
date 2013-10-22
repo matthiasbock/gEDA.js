@@ -43,7 +43,7 @@ Wire.prototype.setFrom = function(x, y) {
         this.from = x;
     else
         this.from = {x:x, y:y};
-    this.refresh();
+    this.draw();
     return this;
 };
 
@@ -56,14 +56,14 @@ Wire.prototype.setTo = function(x, y) {
         this.to = x;
     else
         this.to = {x:x, y:y};
-    this.refresh();
+    this.draw();
     return this;
 };
 
 /*
  * Redraw the wire's SVG
  */
-Wire.prototype.refresh = function() {
+Wire.prototype.draw = function() {
     
     if (this.from == undefined || this.to == undefined)
         return;

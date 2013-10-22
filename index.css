@@ -4,9 +4,6 @@ body {
 }
 
 svg {
-    top: 0px;
-    width: 100%;
-    height: 90%;
     border: 1px dashed gray;
 }
 
@@ -14,9 +11,8 @@ svg {
     stroke: black;
     fill: white;
 }
-
 .circleTerminal:hover {
-    fill: green;
+    fill: blue;
     cursor: pointer;
 }
 
@@ -29,5 +25,15 @@ svg {
 .connectTerminalsLine {
     stroke: gray;
     fill: transparent;
+    stroke-dasharray: 5,3;
+}
+
+.rectBoundingBox {
+    stroke: transparent;
+    fill: transparent;
+    cursor: move;
+}
+.rectBoundingBox:hover {
+    stroke: gray;
     stroke-dasharray: 5,3;
 }

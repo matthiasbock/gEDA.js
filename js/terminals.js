@@ -104,6 +104,16 @@ Terminal.prototype.hookSVG = function(element) {
     this.svg[0][0].onclick = function(event) { onTerminalClick.call(event.toElement, event, terminal); };
 };
 
+Terminal.prototype.setXY = function(x, y) {
+    if (typeof y == 'undefined') {
+        this.svg.attr('cx',x.x);
+        this.svg.attr('cy',x.y);
+    } else {
+        this.svg.attr('cx',x);
+        this.svg.attr('cy',y);
+    }
+};
+
 Terminal.prototype.getXY = function() {
     return {x:this.svg[0][0].cx.baseVal.value, y:this.svg[0][0].cy.baseVal.value};
 };

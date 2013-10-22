@@ -8,6 +8,8 @@ Schematic = function(d3_parent, debug) {
     
     this.debug = debug ? debug : false;
     this.svg = d3_parent.append("svg:svg").attr('id', 'svg');
+    this.svg.style('width',$('body').css('width'));
+    this.svg.style('height',parseInt($('body').css('height'))*0.8);
     this.elements = [];
 };
 
@@ -22,4 +24,8 @@ Schematic.prototype.newCircleTerminal = function() {
 
 Schematic.prototype.newPathElement = function() {
     return this.svg.append('svg:path').attr('class','pathElement');
+};
+
+Schematic.prototype.newBoundingBox = function() {
+    return this.svg.append('svg:rect').attr('class','rectBoundingBox');
 };

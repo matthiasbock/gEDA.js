@@ -16,6 +16,9 @@ Battery = function(parentSchematic, debug, randomXY) {
     
     this.voltage = 0;
     
+    this.bbox = this.parentSchematic.newBoundingBox();
+    var self = this; // closure
+    this.bbox.call(d3.behavior.drag().on("drag", function() { move(self); } ));
     this.path = this.parentSchematic.newPathElement();
     this.circlePlus = this.parentSchematic.newCircleTerminal();
     this.circleMinus = this.parentSchematic.newCircleTerminal();
@@ -38,7 +41,7 @@ Battery = function(parentSchematic, debug, randomXY) {
 Battery.prototype.setXY = function(x, y) {
     this.x = x;
     this.y = y;
-    this.refresh();
+    this.draw();
     return this;
 };
 
@@ -48,7 +51,13 @@ Battery.prototype.setVoltage = function(V) {
     this.terminals[1].setVoltage(-V/2);
 };
 
-Battery.prototype.refresh = function() {
+Battery.prototype.draw = function() {
+    
+    this.bbox
+            .attr('x',this.x-40)
+            .attr('y',this.y-30)
+            .attr('width', 80)
+            .attr('height',60);
     
     var a = {x:this.x-30, y:this.y};
     var b = {x:this.x-3, y:this.y};
@@ -60,8 +69,10 @@ Battery.prototype.refresh = function() {
     var d = {x:this.x+30, y:this.y};
     this.path.attr('d','M'+coord(a)+' L'+coord(b)+' M'+coord(m)+' L'+coord(n)+' M'+coord(v)+' L'+coord(w)+' M'+coord(c)+' L'+coord(d));
     
-    this.circlePlus.attr('cx',a.x);
-    this.circlePlus.attr('cy',a.y);
-    this.circleMinus.attr('cx',d.x);
-    this.circleMinus.attr('cy',d.y);
+    this.terminal[0].setXY(a);
+    this.terminal[1].setXY(d);
+};
+
+function move(battery){
+    battery.setXY(battery.x + d3.event.dx, battery.y + d3.event.dy);
 };
