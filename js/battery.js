@@ -21,8 +21,8 @@ Battery = function(parentSchematic, debug, randomXY) {
     
     this.voltage = 0;
     
-    this.path = this.parentSchematic.newPathElement().attr('id',this.name);
-    this.bbox = this.parentSchematic.newBoundingBox().attr('width', 80).attr('height',60);
+    this.path = this.parentSchematic.newPathElement(this.name, 'm-30,0 l+27,0 m0,-20 l0,+40 m+5,-10 l0,-20 m+1,0 l0,+20 m0,-10 l+27,0');
+    this.bbox = this.parentSchematic.newBoundingBox(80, 60);
     // https://github.com/mbostock/d3/wiki/Drag-Behavior
     var self = this; this.bbox.call(d3.behavior.drag().on("drag", function() { moveElement(self); } )); // closure
     this.circlePlus = this.parentSchematic.newCircleTerminal('terminalBattery');
@@ -72,19 +72,11 @@ Battery.prototype.draw = function() {
     // move bounding box
     this.bbox.attr('x',this.x-40).attr('y',this.y-30);
     
-    // redraw battery symbol
-    var a = {x:this.x-30, y:this.y};
-    var b = {x:this.x-3, y:this.y};
-    var m = {x:this.x-3, y:this.y-20};
-    var n = {x:this.x-3, y:this.y+20};
-    var v = {x:this.x+3, y:this.y-10};
-    var w = {x:this.x+3, y:this.y+10};
-    var c = {x:this.x+3, y:this.y};
-    var d = {x:this.x+30, y:this.y};
-    this.path.attr('d','M'+coord(a)+' L'+coord(b)+' M'+coord(m)+' L'+coord(n)+' M'+coord(v)+' L'+coord(w)+' M'+(v.x+1)+','+v.y+' L'+(w.x+1)+','+w.y+' M'+coord(c)+' L'+coord(d));
+    // move battery symbol
+    this.path.attr('transform','translate('+this.x+','+this.y+')');
     
     // move terminals
-    this.terminals[0].setXY(a);
-    this.terminals[1].setXY(d);
+    this.terminals[0].setXY(this.x-30, this.y);
+    this.terminals[1].setXY(this.x+30, this.y);
 };
 

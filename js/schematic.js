@@ -32,10 +32,20 @@ Schematic.prototype.newCircleTerminal = function(css_class) {
     return this.svg.append('svg:circle').attr('class','circleTerminal '+css_class).attr('r',terminalCircleRadius);
 };
 
-Schematic.prototype.newPathElement = function() {
-    return this.svg.append('svg:path').attr('class','pathElement');
+Schematic.prototype.newPathElement = function(id, d) {
+    var path = this.svg.append('svg:path').attr('class','pathElement');
+    if (typeof id != 'undefined')
+        path.attr('id',id);
+    if (typeof d != 'undefined')
+        path.attr('d',d);
+    return path;
 };
 
-Schematic.prototype.newBoundingBox = function() {
-    return this.svg.append('svg:rect').attr('class','rectBoundingBox');
+Schematic.prototype.newBoundingBox = function(width, height) {
+    var bbox = this.svg.append('svg:rect').attr('class','rectBoundingBox');
+    if (typeof width != 'undefined')
+        bbox.attr('width',width).attr('height',height);
+    else
+        bbox.attr('width',80).attr('height',60);
+    return bbox;
 };
