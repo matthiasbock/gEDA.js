@@ -30,6 +30,7 @@ Wire = function(parentSchematic, debug, randomXY) {
         x = Math.random()*(parseInt($('#svg').css('width'))-50);
         y = Math.random()*(parseInt($('#svg').css('height'))-10);
     }
+    this.from = this.to = {x:0,y:0};
     this.setFrom(x,y).setTo(x+50,y);
 };
 
@@ -37,14 +38,16 @@ Wire = function(parentSchematic, debug, randomXY) {
  * Set SVG coordinates of "From" terminal
  * and invoke "refresh"
  */
-Wire.prototype.setFrom = function(x, y) {
-    // accept point
-    if (typeof y == 'undefined') {
+Wire.prototype.setFrom = function(x, y, updateTerminals) {
+    
+    if (typeof x == 'object') {
         y = x.y;
         x = x.x;
     }
-    this.from = {x:x, y:y};
-    this.draw();
+    if (this.from.x != x || this.from.y != y) {
+        this.from = {x:x, y:y};
+        this.draw(updateTerminals);
+    }
     return this;
 };
 
@@ -52,21 +55,23 @@ Wire.prototype.setFrom = function(x, y) {
  * Set SVG coordinates of "To" terminal
  * and invoke "refresh"
  */
-Wire.prototype.setTo = function(x, y) {
-    // accept point
-    if (typeof y == 'undefined') {
+Wire.prototype.setTo = function(x, y, updateTerminals) {
+    
+    if (typeof x == 'object') {
         y = x.y;
         x = x.x;
     }
-    this.to = {x:x, y:y};
-    this.draw();
+    if (this.to.x != x || this.to.y != y) {
+        this.to = {x:x, y:y};
+        this.draw(updateTerminals);
+    }
     return this;
 };
 
 /*
  * Redraw the wire's SVG
  */
-Wire.prototype.draw = function() {
+Wire.prototype.draw = function(updateTerminals) {
     
     if (this.from == undefined || this.to == undefined)
         return;
@@ -83,6 +88,6 @@ Wire.prototype.draw = function() {
         this.path.attr('d','M'+coord(this.from)+' L'+coord(a)+' L'+coord(this.to));
     }
     
-    this.terminals[0].setXY(this.from);
-    this.terminals[1].setXY(this.to);
+    this.terminals[0].setXY(this.from, updateConnectedTerminals=updateTerminals);
+    this.terminals[1].setXY(this.to, updateConnectedTerminals=updateTerminals);
 };

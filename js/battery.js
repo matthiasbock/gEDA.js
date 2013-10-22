@@ -16,10 +16,10 @@ Battery = function(parentSchematic, debug, randomXY) {
     
     this.voltage = 0;
     
-    this.bbox = this.parentSchematic.newBoundingBox();
-    var self = this; // closure
-    this.bbox.call(d3.behavior.drag().on("drag", function() { move(self); } ));
     this.path = this.parentSchematic.newPathElement();
+    this.bbox = this.parentSchematic.newBoundingBox();
+    // https://github.com/mbostock/d3/wiki/Drag-Behavior
+    var self = this; this.bbox.call(d3.behavior.drag().on("drag", function() { move(self); } )); // closure
     this.circlePlus = this.parentSchematic.newCircleTerminal();
     this.circleMinus = this.parentSchematic.newCircleTerminal();
     
@@ -40,13 +40,21 @@ Battery = function(parentSchematic, debug, randomXY) {
 };
 
 Battery.prototype.setXY = function(x, y) {
-    this.x = x;
-    this.y = y;
-    this.draw();
+    
+    if (typeof x == 'object') {
+        y = x.y;
+        x = x.x;
+    }
+    if (this.x != x || this.y != y) {
+        this.x = x;
+        this.y = y;
+        this.draw();
+    }
     return this;
 };
 
 Battery.prototype.setVoltage = function(V) {
+    
     this.voltage = V;
     this.terminals[0].setVoltage(V/2);
     this.terminals[1].setVoltage(-V/2);

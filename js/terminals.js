@@ -27,17 +27,22 @@ Terminal = function(parentElement, debug) {
  * Check if the applied voltage differs from our terminal voltage.
  * If yes, apply it and tell all connected terminals to update aswell.
  */
-Terminal.prototype.setVoltage = function(V) {
+Terminal.prototype.setVoltage = function(voltage, updateConnectedTerminals) {
     
-    if (V != this.voltage) {
+    if (voltage != this.voltage) {
         if (this.debug)
-            console.log('setVoltage('+V+');');
-        this.voltage = V;
-        for (var i=0; i<this.connectedTerminals.length; i++) {
-            this.connectedTerminals[i].setVoltage(V);
-        }
-    } else if (this.debug)
-        console.log('setVoltage('+V+'): Ignored, terminal voltage already equals '+V+'.');
+            console.log('setVoltage('+voltage+');');
+        
+        // update this terminal
+        this.voltage = voltage;
+        if (typeof this.onSetVoltage != 'undefined')
+            this.onSetVoltage();
+        
+        // update connected terminals
+        if (updateConnectedTerminals ? updateConnectedTerminals : true)
+            for (var i=0; i<this.connectedTerminals.length; i++)
+                this.connectedTerminals[i].setVoltage(voltage, updateConnectedTerminals=false);
+    };
 };
 
 /*
@@ -51,8 +56,7 @@ Terminal.prototype.connectTerminal = function(T) {
             console.log('connectTerminal(T);');
         this.connectedTerminals.push(T);
         T.connectTerminal(this);
-    } else if (this.debug)
-        console.log('connectTerminal(T): Ignored, terminal is already connected.');
+    };
 };
 
 /*
@@ -66,8 +70,7 @@ Terminal.prototype.disconnectTerminal = function(T) {
             console.log('disconnectTerminal(T);');
         this.connectedTerminals.splice(this.connectedTerminals.indexOf(T), 1);
         T.disconnectTerminal(this);
-    } else if (this.debug)
-        console.log('disconnectTerminal(T): Ignored, this terminal is not connected.');
+    };
 };
 
 /*
@@ -116,29 +119,31 @@ Terminal.prototype.hookSVG = function(element) {
  * Therefore, if a terminal is connected, which belongs to a wire, this wire is moved to the new coordinates aswell.
  * Other kinds of elements should be disconnected.
  */
-Terminal.prototype.setXY = function(x, y) {
+Terminal.prototype.setXY = function(x, y, updateConnectedTerminals) {
     
-    // accept tuples
-    if (typeof y == 'undefined') {
+    if (typeof x == 'object') {
         y = x.y;
         x = x.x;
     }
     
-    // move circle to new position
     var now = this.getXY();
     if (now.x != x || now.y != y) {
+        
+        // move circle to new position
         this.svg.attr('cx',x);
         this.svg.attr('cy',y);
-    }
-    
-    // update connected terminals
-    for (var i=0; i<this.connectedTerminals.length; i++) {
-        var e = this.connectedTerminals[i].parentElement;
-        if (e instanceof Wire) {
-            if (e.terminals[0].connectedTerminals.indexOf(this) > -1) {
-                e.setFrom(x, y);
-            } else {
-                e.setTo(x, y);
+        
+        // update connected terminals
+        if (updateConnectedTerminals ? updateConnectedTerminals : true) {
+            for (var i=0; i<this.connectedTerminals.length; i++) {
+                var e = this.connectedTerminals[i].parentElement;
+                if (e instanceof Wire) {
+                    if (e.terminals[0].connectedTerminals.indexOf(this) > -1) {
+                        e.setFrom(x, y, updateTerminals=false);
+                    } else {
+                        e.setTo(x, y, updateTerminals=false);
+                    }
+                }
             }
         }
     }
@@ -173,7 +178,8 @@ onTerminalClick = function(event, terminal) {
         wire.setTo( selection.endTerminal.getXY() );
         selection.beginTerminal.connectTerminal( wire.terminals[0] );
         selection.endTerminal.connectTerminal( wire.terminals[1] );
-        console.log(schematic);
+        if (terminal.debug)
+            console.log(schematic);
         
         selection.path.remove();
         $('#svg').unbind('movemove');

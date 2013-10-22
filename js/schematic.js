@@ -1,4 +1,6 @@
 
+terminalCircleRadius = 5;
+
 /*
  * The schematic object stores a list of elements
  * and a link to the main SVG canvas
@@ -19,7 +21,7 @@ Schematic.prototype.append = function(element) {
 };
 
 Schematic.prototype.newCircleTerminal = function() {
-    return this.svg.append('svg:circle').attr('class','circleTerminal').attr('r','5');
+    return this.svg.append('svg:circle').attr('class','circleTerminal').attr('r',terminalCircleRadius);
 };
 
 Schematic.prototype.newPathElement = function() {
