@@ -104,13 +104,28 @@ Terminal.prototype.hookSVG = function(element) {
     this.svg[0][0].onclick = function(event) { onTerminalClick.call(event.toElement, event, terminal); };
 };
 
+/*
+ * Move a terminal to a new position
+ * 
+ * This method is called implicitly, when elements are moved,
+ * especially by the drag'n'drop handler.
+ * 
+ * Here not only the terminal's SVG is moved to a new position.
+ * Also connected terminals are processed:
+ *  
+ */
 Terminal.prototype.setXY = function(x, y) {
+    var now = this.getXY();
     if (typeof y == 'undefined') {
-        this.svg.attr('cx',x.x);
-        this.svg.attr('cy',x.y);
+        if (now.x != x.x || now.y != x.y) {
+            this.svg.attr('cx',x.x);
+            this.svg.attr('cy',x.y);
+        }
     } else {
-        this.svg.attr('cx',x);
-        this.svg.attr('cy',y);
+        if (now.x != x || now.y != y) {
+            this.svg.attr('cx',x);
+            this.svg.attr('cy',y);
+        }
     }
 };
 
@@ -155,9 +170,11 @@ onTerminalClick = function(event, terminal) {
  * Dashed line shall follow mouse move
  */
 refreshConnectTerminalsLine = function(event) {
-    selection.end = {x:event.originalEvent.x-$('#svg')[0].offsetLeft-2, y:event.originalEvent.y-$('#svg')[0].offsetTop-2};
-    selection.path.attr('d','M'+coord(selection.begin)+' L'+coord(selection.end));
-    //console.log(coord(selection.end));
+    if (typeof selection != 'undefined') {
+        selection.end = {x:event.originalEvent.x-$('#svg')[0].offsetLeft-2, y:event.originalEvent.y-$('#svg')[0].offsetTop-2};
+        selection.path.attr('d','M'+coord(selection.begin)+' L'+coord(selection.end));
+        //console.log(coord(selection.end));
+    }
 };
 
 cancelConnectTerminalsLine = function(event) {

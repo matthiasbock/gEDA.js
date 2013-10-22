@@ -23,6 +23,13 @@ Battery = function(parentSchematic, debug, randomXY) {
     this.circlePlus = this.parentSchematic.newCircleTerminal();
     this.circleMinus = this.parentSchematic.newCircleTerminal();
     
+    this.terminals = [];
+    this.terminals.push( new Terminal(this) );
+    this.terminals.push( new Terminal(this) );
+    this.terminals[0].hookSVG(this.circlePlus);
+    this.terminals[1].hookSVG(this.circleMinus);
+    
+    // set position only after terminal SVG hooks are in place
     var x = 50;
     var y = 50;
     if (randomXY) {
@@ -30,12 +37,6 @@ Battery = function(parentSchematic, debug, randomXY) {
         y = (Math.random()*(parseInt($('#svg').css('height'))-80))+40;
     }
     this.setXY(x,y);
-    
-    this.terminals = [];
-    this.terminals.push( new Terminal(this) );
-    this.terminals.push( new Terminal(this) );
-    this.terminals[0].hookSVG(this.circlePlus);
-    this.terminals[1].hookSVG(this.circleMinus);
 };
 
 Battery.prototype.setXY = function(x, y) {
@@ -69,8 +70,10 @@ Battery.prototype.draw = function() {
     var d = {x:this.x+30, y:this.y};
     this.path.attr('d','M'+coord(a)+' L'+coord(b)+' M'+coord(m)+' L'+coord(n)+' M'+coord(v)+' L'+coord(w)+' M'+coord(c)+' L'+coord(d));
     
-    this.terminal[0].setXY(a);
-    this.terminal[1].setXY(d);
+    if (typeof this.terminals != 'undefined' && this.terminals.length > 1) {
+        this.terminals[0].setXY(a);
+        this.terminals[1].setXY(d);
+    }
 };
 
 function move(battery){
