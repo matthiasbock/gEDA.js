@@ -21,9 +21,14 @@ svg {
     cursor: pointer;
 }
 
-.pathElement {
+.pathWire {
     stroke: black;
     fill: transparent;
+}
+
+.pathElement {
+    stroke: black;
+    fill: white;
 }
 
 .connectTerminalsLine {

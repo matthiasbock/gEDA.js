@@ -17,7 +17,7 @@ Wire = function(parentSchematic, debug, randomXY) {
     this.debug = debug ? debug : (this.parentSchematic.debug ? this.parentSchematic.debug : false);
     randomXY = randomXY ? randomXY : true;
     
-    this.path = this.parentSchematic.newPathElement().attr('id',this.name);
+    this.path = this.parentSchematic.newPathElement(this.name, undefined, 'pathWire');
     this.circleFrom = this.parentSchematic.newCircleTerminal('terminalWire');
     this.circleTo = this.parentSchematic.newCircleTerminal('terminalWire');
     

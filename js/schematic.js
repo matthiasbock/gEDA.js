@@ -45,8 +45,10 @@ Schematic.prototype.newCircleTerminal = function(css_class) {
     return this.svg.append('svg:circle').attr('class','circleTerminal '+css_class).attr('r',terminalCircleRadius);
 };
 
-Schematic.prototype.newPathElement = function(id, d) {
-    var path = this.svg.append('svg:path').attr('class','pathElement');
+Schematic.prototype.newPathElement = function(id, d, css_class) {
+    if (typeof css_class == 'undefined')
+        css_class = 'pathElement';
+    var path = this.svg.append('svg:path').attr('class',css_class);
     if (typeof id != 'undefined')
         path.attr('id',id);
     if (typeof d != 'undefined')
