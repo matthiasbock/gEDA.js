@@ -37,12 +37,14 @@ coord = function(point) {
 };
 
 moveElement = function(element) {
-    element.setXY(element.x + d3.event.dx, element.y + d3.event.dy);
+    if (! (element instanceof Wire))
+        element.setXY(element.x + d3.event.dx, element.y + d3.event.dy);
 };
 
 moveSchematic = function(schematic) {
     for (var i=0; i<schematic.elements.length; i++)
-        moveElement(schematic.elements[i]);
+        if (! (schematic.elements[i] instanceof Wire))
+            moveElement(schematic.elements[i]);
 };
 
 //Capture JS errors from js files called using the $.getScript function
