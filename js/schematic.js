@@ -20,8 +20,8 @@ Schematic.prototype.append = function(element) {
         this.elements.push(element);
 };
 
-Schematic.prototype.newCircleTerminal = function() {
-    return this.svg.append('svg:circle').attr('class','circleTerminal').attr('r',terminalCircleRadius);
+Schematic.prototype.newCircleTerminal = function(css_class) {
+    return this.svg.append('svg:circle').attr('class','circleTerminal '+css_class).attr('r',terminalCircleRadius);
 };
 
 Schematic.prototype.newPathElement = function() {
@@ -31,3 +31,5 @@ Schematic.prototype.newPathElement = function() {
 Schematic.prototype.newBoundingBox = function() {
     return this.svg.append('svg:rect').attr('class','rectBoundingBox');
 };
+
+$('body').append( $('<div id="divNewElements">') );

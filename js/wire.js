@@ -15,14 +15,14 @@ Wire = function(parentSchematic, debug, randomXY) {
     randomXY = randomXY ? randomXY : true;
     
     this.path = this.parentSchematic.newPathElement();
-    this.circleFrom = this.parentSchematic.newCircleTerminal();
-    this.circleTo = this.parentSchematic.newCircleTerminal();
+    this.circleFrom = this.parentSchematic.newCircleTerminal('terminalWire');
+    this.circleTo = this.parentSchematic.newCircleTerminal('terminalWire');
     
-    this.terminals = [];
-    this.terminals.push( new Terminal(this) );
-    this.terminals.push( new Terminal(this) );
+    this.terminals = [new Terminal(this), new Terminal(this)];
     this.terminals[0].hookSVG(this.circleFrom);
     this.terminals[1].hookSVG(this.circleTo);
+    this.terminals[0].onSetVoltage = function() { this.parentElement.terminals[1].setVoltage(this.voltage); };
+    this.terminals[1].onSetVoltage = function() { this.parentElement.terminals[0].setVoltage(this.voltage); };
     
     var x = 50;
     var y = 50;

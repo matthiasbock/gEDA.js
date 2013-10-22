@@ -20,8 +20,8 @@ Battery = function(parentSchematic, debug, randomXY) {
     this.bbox = this.parentSchematic.newBoundingBox();
     // https://github.com/mbostock/d3/wiki/Drag-Behavior
     var self = this; this.bbox.call(d3.behavior.drag().on("drag", function() { move(self); } )); // closure
-    this.circlePlus = this.parentSchematic.newCircleTerminal();
-    this.circleMinus = this.parentSchematic.newCircleTerminal();
+    this.circlePlus = this.parentSchematic.newCircleTerminal('terminalBattery');
+    this.circleMinus = this.parentSchematic.newCircleTerminal('terminalBattery');
     
     this.terminals = [];
     this.terminals.push( new Terminal(this) );
@@ -85,3 +85,5 @@ Battery.prototype.draw = function() {
 function move(battery){
     battery.setXY(battery.x + d3.event.dx, battery.y + d3.event.dy);
 };
+
+$('#divNewElements').append( $('<input type=button value="New battery" onclick="new Battery(schematic);"/>') );
