@@ -19,8 +19,8 @@ LED = function(parentSchematic, debug, randomXY) {
     this.debug = debug ? debug : (this.parentSchematic.debug ? this.parentSchematic.debug : false);
     randomXY = randomXY ? randomXY : true;
     
-    this.path = this.parentSchematic.newPathElement().attr('id',this.name);
-    this.bbox = this.parentSchematic.newBoundingBox().attr('width', 80).attr('height',60);
+    this.path = this.parentSchematic.newPathElement(this.name, 'm-30,0 l+20,0 m+20,0 l-20,-10 l0,+20 l+20,-10 m0,-10 l0,+20 m0,-10 l+20,0');
+    this.bbox = this.parentSchematic.newBoundingBox(80, 60);
     var self = this; this.bbox.call(d3.behavior.drag().on("drag", function() { moveElement(self); } ));
     this.circlePlus = this.parentSchematic.newCircleTerminal('terminalLED');
     this.circleMinus = this.parentSchematic.newCircleTerminal('terminalLED');
@@ -62,18 +62,11 @@ LED.prototype.draw = function() {
     // move bounding box
     this.bbox.attr('x',this.x-40).attr('y',this.y-30);
     
-    // redraw LED symbol
-    var a = {x:this.x-30, y:this.y};
-    var b = {x:this.x+30, y:this.y};
-    var m = {x:this.x-10, y:this.y-10};
-    var n = {x:this.x-10, y:this.y+10};
-    var o = {x:this.x+10, y:this.y};
-    var v = {x:this.x+10, y:this.y-10};
-    var w = {x:this.x+10, y:this.y+10};
-    this.path.attr('d','M'+coord(a)+' L'+coord(b)+' M'+coord(m)+' L'+coord(n)+' L'+coord(o)+' Z M'+coord(v)+' L'+coord(w));
+    // move LED symbol
+    this.path.attr('transform', 'translate('+this.x+','+this.y+')');
     
     // move terminals
-    this.terminals[0].setXY(a);
-    this.terminals[1].setXY(b);
+    this.terminals[0].setXY(this.x-30, this.y);
+    this.terminals[1].setXY(this.x+30, this.y);
 };
 
