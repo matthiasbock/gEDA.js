@@ -36,6 +36,10 @@ coord = function(point) {
     return point.x+','+point.y;
 };
 
+function moveElement(element) {
+    element.setXY(element.x + d3.event.dx, element.y + d3.event.dy);
+};
+
 //Capture JS errors from js files called using the $.getScript function
 $.extend({
     getScript: function (url, callback) {
@@ -65,3 +69,5 @@ $.getScript('js/schematic.js');
 $.getScript('js/terminals.js');
 $.getScript('js/wire.js');
 $.getScript('js/battery.js');
+$.getScript('js/led.js');
+
