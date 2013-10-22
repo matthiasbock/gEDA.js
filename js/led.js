@@ -4,14 +4,12 @@ numberOfLEDs = 0;
 $('#divNewElements').append( $('<input type=button value="New LED" onclick="new LED(schematic);"/>') );
 
 /*
- * Battery power source
- * 
- * two poles: plus, minus
- * two ends
- * two terminals
+ * Light emitting diode
  */
 
 LED = function(parentSchematic, debug, randomXY) {
+    
+    Element.call(this);
     
     this.name = 'led'+(numberOfLEDs++);
     this.parentSchematic = parentSchematic;
@@ -39,34 +37,6 @@ LED = function(parentSchematic, debug, randomXY) {
     this.setXY(x,y);
 };
 
-LED.prototype.getName = function() {
-    return this.parentSchematic.getName()+' > '+this.name;
-};
+LED.prototype = new Element();
 
-LED.prototype.setXY = function(x, y) {
-    
-    if (typeof x == 'object') {
-        y = x.y;
-        x = x.x;
-    }
-    if (this.x != x || this.y != y) {
-        this.x = x;
-        this.y = y;
-        this.draw();
-    }
-    return this;
-};
-
-LED.prototype.draw = function() {
-    
-    // move bounding box
-    this.bbox.attr('x',this.x-40).attr('y',this.y-30);
-    
-    // move LED symbol
-    this.path.attr('transform', 'translate('+this.x+','+this.y+')');
-    
-    // move terminals
-    this.terminals[0].setXY(this.x-30, this.y);
-    this.terminals[1].setXY(this.x+30, this.y);
-};
-
+LED.prototype.constructor = LED;

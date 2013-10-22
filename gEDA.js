@@ -75,6 +75,4 @@ $.extend({
 $.getScript('js/schematic.js');
 $.getScript('js/terminals.js');
 $.getScript('js/wire.js');
-$.getScript('js/battery.js');
-$.getScript('js/resistor.js');
-$.getScript('js/led.js');
+$.getScript('js/elements.js');
