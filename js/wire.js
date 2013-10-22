@@ -18,6 +18,12 @@ Wire = function(parentSchematic, debug, randomXY) {
     this.circleFrom = this.parentSchematic.newCircleTerminal();
     this.circleTo = this.parentSchematic.newCircleTerminal();
     
+    this.terminals = [];
+    this.terminals.push( new Terminal(this) );
+    this.terminals.push( new Terminal(this) );
+    this.terminals[0].hookSVG(this.circleFrom);
+    this.terminals[1].hookSVG(this.circleTo);
+    
     var x = 50;
     var y = 50;
     if (randomXY) {
@@ -25,13 +31,6 @@ Wire = function(parentSchematic, debug, randomXY) {
         y = Math.random()*(parseInt($('#svg').css('height'))-10);
     }
     this.setFrom(x,y).setTo(x+50,y);
-    
-    this.terminals = [];
-    this.terminals.push( new Terminal(this) );
-    this.terminals.push( new Terminal(this) );
-    this.terminals[0].connectTerminal( this.terminals[1] );
-    this.terminals[0].hookSVG(this.circleFrom);
-    this.terminals[1].hookSVG(this.circleTo);
 };
 
 /*
@@ -39,10 +38,12 @@ Wire = function(parentSchematic, debug, randomXY) {
  * and invoke "refresh"
  */
 Wire.prototype.setFrom = function(x, y) {
-    if (typeof y == 'undefined')
-        this.from = x;
-    else
-        this.from = {x:x, y:y};
+    // accept point
+    if (typeof y == 'undefined') {
+        y = x.y;
+        x = x.x;
+    }
+    this.from = {x:x, y:y};
     this.draw();
     return this;
 };
@@ -52,10 +53,12 @@ Wire.prototype.setFrom = function(x, y) {
  * and invoke "refresh"
  */
 Wire.prototype.setTo = function(x, y) {
-    if (typeof y == 'undefined')
-        this.to = x;
-    else
-        this.to = {x:x, y:y};
+    // accept point
+    if (typeof y == 'undefined') {
+        y = x.y;
+        x = x.x;
+    }
+    this.to = {x:x, y:y};
     this.draw();
     return this;
 };
@@ -80,9 +83,6 @@ Wire.prototype.draw = function() {
         this.path.attr('d','M'+coord(this.from)+' L'+coord(a)+' L'+coord(this.to));
     }
     
-    this.circleFrom.attr('cx',this.from.x);
-    this.circleFrom.attr('cy',this.from.y);
-    this.circleTo.attr('cx',this.to.x);
-    this.circleTo.attr('cy',this.to.y);
+    this.terminals[0].setXY(this.from);
+    this.terminals[1].setXY(this.to);
 };
-

@@ -70,10 +70,8 @@ Battery.prototype.draw = function() {
     var d = {x:this.x+30, y:this.y};
     this.path.attr('d','M'+coord(a)+' L'+coord(b)+' M'+coord(m)+' L'+coord(n)+' M'+coord(v)+' L'+coord(w)+' M'+coord(c)+' L'+coord(d));
     
-    if (typeof this.terminals != 'undefined' && this.terminals.length > 1) {
-        this.terminals[0].setXY(a);
-        this.terminals[1].setXY(d);
-    }
+    this.terminals[0].setXY(a);
+    this.terminals[1].setXY(d);
 };
 
 function move(battery){

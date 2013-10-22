@@ -112,19 +112,34 @@ Terminal.prototype.hookSVG = function(element) {
  * 
  * Here not only the terminal's SVG is moved to a new position.
  * Also connected terminals are processed:
- *  
+ * Internally connected terminals should not be visually separated.
+ * Therefore, if a terminal is connected, which belongs to a wire, this wire is moved to the new coordinates aswell.
+ * Other kinds of elements should be disconnected.
  */
 Terminal.prototype.setXY = function(x, y) {
-    var now = this.getXY();
+    
+    // accept tuples
     if (typeof y == 'undefined') {
-        if (now.x != x.x || now.y != x.y) {
-            this.svg.attr('cx',x.x);
-            this.svg.attr('cy',x.y);
-        }
-    } else {
-        if (now.x != x || now.y != y) {
-            this.svg.attr('cx',x);
-            this.svg.attr('cy',y);
+        y = x.y;
+        x = x.x;
+    }
+    
+    // move circle to new position
+    var now = this.getXY();
+    if (now.x != x || now.y != y) {
+        this.svg.attr('cx',x);
+        this.svg.attr('cy',y);
+    }
+    
+    // update connected terminals
+    for (var i=0; i<this.connectedTerminals.length; i++) {
+        var e = this.connectedTerminals[i].parentElement;
+        if (e instanceof Wire) {
+            if (e.terminals[0].connectedTerminals.indexOf(this) > -1) {
+                e.setFrom(x, y);
+            } else {
+                e.setTo(x, y);
+            }
         }
     }
 };
