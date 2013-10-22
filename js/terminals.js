@@ -1,4 +1,6 @@
 
+numberOfTerminals = 0;
+
 /*
  * Allowed terminal directions
  */
@@ -15,12 +17,17 @@ EAST = 'EAST';
  */
 Terminal = function(parentElement, debug) {
     
+    this.name = 'terminal'+(numberOfTerminals++);
     this.parentElement = parentElement;
     this.debug = debug ? debug : (this.parentElement.debug ? this.parentElement.debug : false);
     this.voltage = 0;
     this.connectedTerminals = [];
     this.direction = NORTH;
     this.label = '';
+};
+
+Terminal.prototype.getName = function() {
+    return this.parentElement.getName()+' > '+this.name;
 };
 
 /*
@@ -31,7 +38,7 @@ Terminal.prototype.setVoltage = function(voltage, updateConnectedTerminals) {
     
     if (voltage != this.voltage) {
         if (this.debug)
-            console.log('setVoltage('+voltage+');');
+            console.log(this.getName()+'.setVoltage('+voltage+');');
         
         // update this terminal
         this.voltage = voltage;
@@ -51,9 +58,9 @@ Terminal.prototype.setVoltage = function(voltage, updateConnectedTerminals) {
  */
 Terminal.prototype.connectTerminal = function(T) {
     
-    if (this.connectedTerminals.indexOf(T) < 0) {
+    if (this.connectedTerminals.indexOf(T) == -1) {
         if (this.debug)
-            console.log('connectTerminal(T);');
+            console.log(this.getName()+'.connectTerminal( '+T.getName()+' );');
         this.connectedTerminals.push(T);
         T.connectTerminal(this);
     };
@@ -67,7 +74,7 @@ Terminal.prototype.disconnectTerminal = function(T) {
     
     if (this.connectedTerminals.indexOf(T) > -1) {
         if (this.debug)
-            console.log('disconnectTerminal(T);');
+            console.log(this.getName()+'.disconnectTerminal( '+T.getName()+' );');
         this.connectedTerminals.splice(this.connectedTerminals.indexOf(T), 1);
         T.disconnectTerminal(this);
     };
@@ -93,6 +100,7 @@ Terminal.prototype.disconnectAllTerminals = function() {
 Terminal.prototype.hookSVG = function(element) {
     
     this.svg = element;
+    this.svg.attr('id',this.name);
     
     /*
      * Programming a closure for the event function
@@ -177,7 +185,7 @@ onTerminalClick = function(event, terminal) {
         wire.setFrom( selection.beginTerminal.getXY() );
         wire.setTo( selection.endTerminal.getXY() );
         selection.beginTerminal.connectTerminal( wire.terminals[0] );
-        selection.endTerminal.connectTerminal( wire.terminals[1] );
+        wire.terminals[1].connectTerminal( selection.endTerminal );
         if (terminal.debug)
             console.log(schematic);
         

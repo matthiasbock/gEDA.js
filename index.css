@@ -19,7 +19,6 @@ svg {
 .pathElement {
     stroke: black;
     fill: transparent;
-    cursor: move;
 }
 
 .connectTerminalsLine {

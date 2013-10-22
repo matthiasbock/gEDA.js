@@ -1,4 +1,8 @@
 
+numberOfBatteries = 0;
+
+$('#divNewElements').append( $('<input type=button value="New battery" onclick="new Battery(schematic);"/>') );
+
 /*
  * Battery power source
  * 
@@ -9,6 +13,7 @@
 
 Battery = function(parentSchematic, debug, randomXY) {
     
+    this.name = 'battery'+(numberOfBatteries++);
     this.parentSchematic = parentSchematic;
     this.parentSchematic.append(this);
     this.debug = debug ? debug : (this.parentSchematic.debug ? this.parentSchematic.debug : false);
@@ -16,10 +21,10 @@ Battery = function(parentSchematic, debug, randomXY) {
     
     this.voltage = 0;
     
-    this.path = this.parentSchematic.newPathElement();
-    this.bbox = this.parentSchematic.newBoundingBox();
+    this.path = this.parentSchematic.newPathElement().attr('id',this.name);
+    this.bbox = this.parentSchematic.newBoundingBox().attr('width', 80).attr('height',60);
     // https://github.com/mbostock/d3/wiki/Drag-Behavior
-    var self = this; this.bbox.call(d3.behavior.drag().on("drag", function() { move(self); } )); // closure
+    var self = this; this.bbox.call(d3.behavior.drag().on("drag", function() { moveBattery(self); } )); // closure
     this.circlePlus = this.parentSchematic.newCircleTerminal('terminalBattery');
     this.circleMinus = this.parentSchematic.newCircleTerminal('terminalBattery');
     
@@ -37,6 +42,10 @@ Battery = function(parentSchematic, debug, randomXY) {
         y = (Math.random()*(parseInt($('#svg').css('height'))-80))+40;
     }
     this.setXY(x,y);
+};
+
+Battery.prototype.getName = function() {
+    return this.parentSchematic.getName()+' > '+this.name;
 };
 
 Battery.prototype.setXY = function(x, y) {
@@ -62,12 +71,10 @@ Battery.prototype.setVoltage = function(V) {
 
 Battery.prototype.draw = function() {
     
-    this.bbox
-            .attr('x',this.x-40)
-            .attr('y',this.y-30)
-            .attr('width', 80)
-            .attr('height',60);
+    // move bounding box
+    this.bbox.attr('x',this.x-40).attr('y',this.y-30);
     
+    // redraw battery symbol
     var a = {x:this.x-30, y:this.y};
     var b = {x:this.x-3, y:this.y};
     var m = {x:this.x-3, y:this.y-20};
@@ -78,12 +85,12 @@ Battery.prototype.draw = function() {
     var d = {x:this.x+30, y:this.y};
     this.path.attr('d','M'+coord(a)+' L'+coord(b)+' M'+coord(m)+' L'+coord(n)+' M'+coord(v)+' L'+coord(w)+' M'+coord(c)+' L'+coord(d));
     
+    // move terminals
     this.terminals[0].setXY(a);
     this.terminals[1].setXY(d);
 };
 
-function move(battery){
+function moveBattery(battery){
     battery.setXY(battery.x + d3.event.dx, battery.y + d3.event.dy);
 };
 
-$('#divNewElements').append( $('<input type=button value="New battery" onclick="new Battery(schematic);"/>') );

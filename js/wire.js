@@ -1,4 +1,6 @@
 
+numberOfWires = 0;
+
 /*
  * Simplest element: a wire
  * 
@@ -9,12 +11,13 @@
 
 Wire = function(parentSchematic, debug, randomXY) {
     
+    this.name = 'wire'+(numberOfWires++);
     this.parentSchematic = parentSchematic;
     this.parentSchematic.append(this);
     this.debug = debug ? debug : (this.parentSchematic.debug ? this.parentSchematic.debug : false);
     randomXY = randomXY ? randomXY : true;
     
-    this.path = this.parentSchematic.newPathElement();
+    this.path = this.parentSchematic.newPathElement().attr('id',this.name);
     this.circleFrom = this.parentSchematic.newCircleTerminal('terminalWire');
     this.circleTo = this.parentSchematic.newCircleTerminal('terminalWire');
     
@@ -32,6 +35,10 @@ Wire = function(parentSchematic, debug, randomXY) {
     }
     this.from = this.to = {x:0,y:0};
     this.setFrom(x,y).setTo(x+50,y);
+};
+
+Wire.prototype.getName = function() {
+    return this.parentSchematic.getName()+' > '+this.name;
 };
 
 /*
