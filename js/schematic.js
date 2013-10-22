@@ -13,10 +13,23 @@ Schematic = function(d3_parent, debug) {
     
     this.name = 'schematic'+(numberOfSchematics++);
     this.debug = debug ? debug : false;
-    this.svg = d3_parent.append("svg:svg").attr('id', 'svg');
-    this.svg.style('width',$('body').css('width'));
-    this.svg.style('height',parseInt($('body').css('height'))*0.8);
+    
+    var width = $('body').css('width');
+    var height = parseInt($('body').css('height'))*0.8;
+    this.svg = d3_parent.append("svg:svg")
+                                .attr('id', 'svg')
+                                .style('width',width)
+                                .style('height',height);
     this.elements = [];
+    
+    this.rectMoveCanvas = this.svg.append('svg:rect')
+                                    .attr('class','rectMoveCanvas')
+                                    .attr('x',0)
+                                    .attr('y',0)
+                                    .attr('width',width)
+                                    .attr('height',height);
+    var self = this;
+    this.rectMoveCanvas.call(d3.behavior.drag().on("drag", function() { moveSchematic(self); } ));
 };
 
 Schematic.prototype.getName = function() {
