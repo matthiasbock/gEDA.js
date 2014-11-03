@@ -3,5 +3,4 @@ Bitswitcher-GPIO
 .project
 .pydevproject
 .settings
-*.sch
 *.*~
