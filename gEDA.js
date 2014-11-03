@@ -51,9 +51,23 @@ function main()
     console.log(elmt.length+' schematic(s) found in document.');
     for (var i=0; i<elmt.length; i++)
     {
+        elmt[i] = $(elmt[i]);
         // import model from enclosed text
-        schematics.push( new GAF(elmt[i].innerHTML) );
-        // append XML-style model to DOM
-        $('body').append( schematics[i].exportDOM() );
+        schematics.push( new GAF(elmt[i].html()) );
+        // add imported schematic to DOM
+        schematics[i]
+            .exportDOM( $('<geda-schematic format="application/gaf-xml"></geda-schematic>') )
+            .insertAfter( elmt[i] );
+        elmt[i].css('display','none');
     }
 };
+
+/*
+ * Register <geda-schematic> as valid HTML element
+ *
+ * http://www.w3.org/TR/custom-elements/
+ * http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
+ */
+geda_schematic = document.registerElement('geda-schematic');
+
+// TODO: Register an element after it was created (onload) -> immediately pipe to importer

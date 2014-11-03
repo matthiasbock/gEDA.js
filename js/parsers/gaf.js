@@ -26,6 +26,7 @@ GAF = function(s) {
  */
 GAF.prototype.importFromString = function(s) {
 
+    // start with an empty list of objects
     this.objects = [];
     
     // GAF is one object per line, except for attributes blocks, which are enclosed by {}
@@ -36,7 +37,7 @@ GAF.prototype.importFromString = function(s) {
         // don't parse blank lines
         if (line.length > 0)
         {
-            // beginning of an attribute section
+            // it is an attribute section
             if (line.indexOf('{') > -1)
             {
                 // make a string from attributes section and parse it
@@ -54,10 +55,31 @@ GAF.prototype.importFromString = function(s) {
                 this.objects[this.objects.length-1].parseAttributes(attrs);
             }
             
-            // object
+            // it is an object
             else {
+                /* The text object requires special treatment,
+                 * because num_lines of text follow
+                 * which need also to be imported
+                 */
+                var text = '';
+                if (line.substr(0,1) == 'T')
+                {
+                    // the last field is num_lines
+                    var p = line.split(' ');
+                    var num_lines = p[p.length-1];
+                    // add num_lines to following string 
+                    for (var j=1; j<=num_lines; j++)
+                    {
+                        // skip one line
+                        i++;
+                        if (text.length > 0)
+                            text += '\n';
+                        text += lines[i];
+                    }
+                }
+                
                 // create new GAF object from line string and append to objects array
-                this.objects.push( new GAF_Object(line) );
+                this.objects.push( new GAF_Object(line, text) );
             }
         }
     }
@@ -66,17 +88,14 @@ GAF.prototype.importFromString = function(s) {
 /*
  * Use jQuery to create an XML-like DOM element from this GAF object
  */
-GAF.prototype.exportDOM = function()
+GAF.prototype.exportDOM = function(parent)
 {
-    // create new DOM object with jQuery
-    var dom = $('<geda-schematic format="application/gaf-xml"></geda-schematic>');
-
-    // export all GAF objects
+    // export all objects in this GAF model
     for (var i=0; i<this.objects.length; i++)
     {
-        dom.append( this.objects[i].exportDOM() );
+        parent.append( this.objects[i].exportDOM() );
     }
 
     // return DOM object
-    return dom;
+    return parent;
 }
