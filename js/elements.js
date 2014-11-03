@@ -18,12 +18,12 @@ Element.prototype.setXY = function(x, y) {
     if (this.x != x || this.y != y) {
         this.x = x;
         this.y = y;
-        this.draw();
+        this.refresh();
     }
     return this;
 };
 
-Element.prototype.draw = function() {
+Element.prototype.refresh = function() {
     
     // move bounding box
     this.bbox.attr('x',this.x-40).attr('y',this.y-30);

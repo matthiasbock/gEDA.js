@@ -1,0 +1,51 @@
+<html>
+
+<head>
+<script src="include/jquery.js"></script>
+<script src="include/d3.v3.js"></script>
+<script src="gEDA.js"></script>
+<link rel="stylesheet" type="text/css" href="index.css"/>
+</head>
+
+<body>
+<!--
+gEDA/gaf is a FOSS format for schematics.
+It is used by the gEDA suite.
+Specification is available at http://wiki.geda-project.org/geda:file_format_spec
+Parser is at js/parsers/gaf.js
+
+gEDA.js will import the <geda-schematic> below and replace it with an SVG, rendering the contained schematic. 
+-->
+<schematic format="application/gaf" width="600" height="400">
+v 20130925 2
+C 40000 40000 0 0 0 title-B.sym
+C 44400 46700 1 0 0 max478-1.sym
+{
+T 45025 47850 5 10 0 0 0 0 1
+device=MAX478
+T 45000 47350 5 10 1 1 0 0 1
+refdes=U?
+T 45100 49200 5 10 0 0 0 0 1
+footprint=DIP8
+}
+C 49500 45900 1 0 0 max478-1.sym
+{
+T 50125 47050 5 10 0 0 0 0 1
+device=MAX478
+T 50100 46550 5 10 1 1 0 0 1
+refdes=U?
+T 50200 48400 5 10 0 0 0 0 1
+footprint=DIP8
+}
+N 45400 47100 49500 47100 4
+N 49500 47100 49500 46500 4
+N 49500 46100 44400 46100 4
+N 44400 46100 44400 46900 4
+N 50500 46300 50500 44000 4
+N 43700 44000 50500 44000 4
+N 44400 47300 43700 47300 4
+N 43700 47300 43700 44000 4
+</schematic>
+</body>
+
+</html>

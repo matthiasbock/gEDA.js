@@ -1,6 +1,6 @@
 
 numberOfSchematics = 0;
-terminalCircleRadius = 5;
+terminalCircleRadius = 4;
 
 $('body').append( $('<div id="divNewElements">') );
 
