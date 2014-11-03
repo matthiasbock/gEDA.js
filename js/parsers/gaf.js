@@ -62,3 +62,21 @@ GAF.prototype.importFromString = function(s) {
         }
     }
 };
+
+/*
+ * Use jQuery to create an XML-like DOM element from this GAF object
+ */
+GAF.prototype.exportDOM = function()
+{
+    // create new DOM object with jQuery
+    var dom = $('<geda-schematic format="application/gaf-xml"></geda-schematic>');
+
+    // export all GAF objects
+    for (var i=0; i<this.objects.length; i++)
+    {
+        dom.append( this.objects[i].exportDOM() );
+    }
+
+    // return DOM object
+    return dom;
+}
