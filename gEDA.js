@@ -52,13 +52,24 @@ function main()
     for (var i=0; i<elmt.length; i++)
     {
         elmt[i] = $(elmt[i]);
-        // import model from enclosed text
-        schematics.push( new GAF(elmt[i].html()) );
-        // add imported schematic to DOM
-        schematics[i]
-            .exportDOM( $('<geda-schematic format="application/gaf-xml"></geda-schematic>') )
-            .insertAfter( elmt[i] );
+
+        // hide unimported model
         elmt[i].css('display','none');
+
+        // put everything related to this schematic in a separate container
+        var container = $('<geda-project/>');
+        container.insertAfter(elmt[i]);
+        elmt[i].appendTo(container);
+
+        // import model
+        schematics.push( new GAF(elmt[i].html()) );
+
+        // add imported schematic to container
+        container.append(
+            schematics[i].exportDOM(
+                            $('<geda-schematic format="application/gaf-xml"></geda-schematic>')
+                            )
+        );
     }
 };
 
