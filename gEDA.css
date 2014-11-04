@@ -47,9 +47,18 @@ svg {
     stroke-dasharray: 5,3;
 }
 
-geda-component > svg line
+geda-component > svg line.line
 {
     stroke: black;
+}
+geda-component > svg line.pin
+{
+    stroke: red;
+}
+geda-component > svg rect
+{
+    stroke: black;
+    fill: white;
 }
 
 g.component > rect

@@ -15,6 +15,7 @@ Parser is at js/parsers/gaf.js
 gEDA.js will import the <geda-schematic> below and replace it with an SVG, rendering the contained schematic. 
 -->
 <geda-project>
+Demo project, GAF exported from GSchem:<br/>
 <geda-schematic format="application/gaf">
 v 20130925 2
 C 40000 40000 0 0 0 title-B.sym
@@ -48,6 +49,9 @@ N 45700 45000 45700 46300 4
 N 45700 47200 45700 47900 4
 N 45700 47900 46900 47900 4
 </geda-schematic>
+<br/>
+<hr>
+Component library:<br/>
 <geda-library>
 <geda-component component="battery-1.sym" format="application/gaf">
 v 20050820 1
@@ -87,7 +91,82 @@ T 300 700 5 10 0 0 0 0 1
 numslots=0
 T 300 1300 5 10 0 0 0 0 1
 symversion=0.1
-</geda-schematic>
+</geda-component>
+<geda-component component="resistor-2.sym" format="application/gaf">
+v 20081221 2
+P 900 100 750 100 1 0 0
+{
+T 800 150 5 8 0 1 0 0 1
+pinnumber=2
+T 800 150 5 8 0 0 0 0 1
+pinseq=2
+T 800 150 5 8 0 1 0 0 1
+pinlabel=2
+T 800 150 5 8 0 1 0 0 1
+pintype=pas
+}
+P 0 100 150 100 1 0 0
+{
+T 100 150 5 8 0 1 0 0 1
+pinnumber=1
+T 100 150 5 8 0 0 0 0 1
+pinseq=1
+T 100 150 5 8 0 1 0 0 1
+pinlabel=1
+T 100 150 5 8 0 1 0 0 1
+pintype=pas
+}
+B 150 0 600 200 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
+T 400 350 5 10 0 0 0 0 1
+device=RESISTOR
+T 200 300 8 10 1 1 0 0 1
+refdes=R?
+</geda-component>
+<geda-component component="led-3.sym" format="application/gaf">
+v 20031231 1
+L 600 0 600 400 3 0 0 0 -1 -1
+L 600 0 300 200 3 0 0 0 -1 -1
+T 950 650 5 10 0 0 0 0 1
+device=LED
+L 300 200 600 400 3 0 0 0 -1 -1
+L 300 0 300 400 3 0 0 0 -1 -1
+P 0 200 200 200 1 0 0
+{
+T 200 150 5 8 0 1 180 0 1
+pinnumber=1
+T 800 650 9 8 0 1 180 0 1
+pinlabel=CATHODE
+T 900 850 5 8 0 0 180 0 1
+pintype=pas
+T 600 950 5 8 0 0 180 0 1
+pinseq=1
+}
+P 900 200 700 200 1 0 0
+{
+T 800 150 5 8 0 1 180 0 1
+pinnumber=2
+T 1400 150 9 8 0 1 180 0 1
+pinlabel=ANODE
+T 1000 350 5 8 0 0 180 8 1
+pintype=pas
+T 1000 250 5 8 0 0 180 8 1
+pinseq=2
+}
+L 200 200 300 200 3 0 0 0 -1 -1
+L 600 200 700 200 3 0 0 0 -1 -1
+T 450 550 8 10 1 1 0 0 1
+refdes=D?
+L 500 400 400 500 3 0 0 0 -1 -1
+L 400 400 300 500 3 0 0 0 -1 -1
+L 300 500 325 450 3 0 0 0 -1 -1
+L 300 500 350 475 3 0 0 0 -1 -1
+L 400 500 425 450 3 0 0 0 -1 -1
+L 400 500 450 475 3 0 0 0 -1 -1
+T 950 550 5 10 0 0 0 0 1
+description=Generic LED
+T 950 450 5 10 0 0 0 0 1
+numslots=0
+</geda-component>
 </geda-library>
 </geda-project>
 </body>

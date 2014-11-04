@@ -22,24 +22,41 @@ LibraryComponent.prototype.fromGAF = function(src)
     else
         var gaf = src;
 
-    // import lines and pins
+    // import lines
     this.lines = gaf.filterType(GAF_OBJECT_LINE);
-    this.pins = [];
+    // import pins
+    this.pins = gaf.filterType(GAF_OBJECT_PIN);
+    // import rects/boxes
+    this.rects = gaf.filterType(GAF_OBJECT_BOX);
 
     // move whole SVG to (0,0), therefore find minX and minY
     var x = [], y = [];
+    // line min/max
     for (var i=0; i<this.lines.length; i++)
     {
         var l = this.lines[i];
-        x.push(l.x1);
-        y.push(l.y1)
-        x.push(l.x2);
-        y.push(l.y2)
+        x.push(l.x1); y.push(l.y1); x.push(l.x2); y.push(l.y2);
+    }
+    // pin min/max
+    for (var i=0; i<this.pins.length; i++)
+    {
+        var p = this.pins[i];
+        x.push(p.x1); y.push(p.y1); x.push(p.x2); y.push(p.y2);
+    }
+    // rect min/max
+    for (var i=0; i<this.rects.length; i++)
+    {
+        var r = this.rects[i];
+        x.push(r.x); y.push(r.y); x.push(r.x+r.width); y.push(r.y+r.height);
     }
     this.minX = d3.min(x);
+//    this.minX = this.minX ? this.minX : 0;
     this.maxX = d3.max(x);
+//    this.maxX = this.maxX ? this.maxX : 0;
     this.minY = d3.min(y);
+//    this.minY = this.minY ? this.minY : 0;
     this.maxY = d3.max(y);
+//    this.maxY = this.maxY ? this.maxY : 0;
     
     return this;
 }
@@ -53,19 +70,42 @@ LibraryComponent.prototype.exportDOM = function()
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
                 .attr('width', this.maxX-this.minX)
                 .attr('height', this.maxY-this.minY);
-    var g = svg.append('svg:g')
-            .attr('transform', 'translate('+(-this.minX)+', '+(-this.minY)+')');
+    var g = svg.append('svg:g');
+    if (this.minX != 0 || this.minY != 0)
+        g.attr('transform', 'translate('+(-this.minX)+', '+(-this.minY)+')');
     
-    // export lines and pins
+    // export lines
     for (var i=0; i<this.lines.length; i++)
     {
         var l = this.lines[i];
         g.append('svg:line')
+            .attr('class', 'line')
             .attr('x1', l.x1)
             .attr('y1', l.y1)
             .attr('x2', l.x2)
             .attr('y2', l.y2)
             .style('stroke-width', l.linewidth+1);
+    }
+    // export pins
+    for (var i=0; i<this.pins.length; i++)
+    {
+        var p = this.pins[i];
+        g.append('svg:line')
+            .attr('class', 'pin')
+            .attr('x1', p.x1)
+            .attr('y1', p.y1)
+            .attr('x2', p.x2)
+            .attr('y2', p.y2);
+    }
+    // export rects
+    for (var i=0; i<this.rects.length; i++)
+    {
+        var r = this.rects[i];
+        g.append('svg:rect')
+            .attr('x', r.x)
+            .attr('y', r.y)
+            .attr('width', r.width)
+            .attr('height', r.height);
     }
 
     return dom;

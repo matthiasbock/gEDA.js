@@ -6,10 +6,16 @@ numberOfSchematics = 0;
  * which is stored directly in the DOM,
  * with the user interface, i.e. actions on SVG elements.
  */
-Schematic = function(d3_parent, debug) {
+Schematic = function(source) {
     
     this.name = 'schematic'+(numberOfSchematics++);
-    this.debug = debug ? debug : false;
+    var d3_parent = d3.select('body');
+    
+    // create from existing source?
+    if (typeof source != 'undefined')
+    {
+        d3_parent = d3.select( source.parent()[0] );
+    }
     
     /*
      * User Interface (UI):
@@ -33,6 +39,24 @@ Schematic = function(d3_parent, debug) {
         .attr('id','viewport');
     $('svg#'+this.name).svgPan('viewport', true, true, true, 0.8);
 
+    if (typeof source != 'undefined')
+    {
+        // create from GSchem/GAF
+        if (source.attr('format') == 'application/gaf')
+        {
+            // import model
+            var gaf = new GAF(source.html());
+            
+            // add imported schematic to container
+            var after = gaf.exportDOM(
+                            $('<geda-schematic format="application/gaf-xml" style="display:none;"></geda-schematic>')
+                        )
+                        .insertAfter(source);
+
+            this.fromGAF(gaf);
+        }
+    }
+
     /*
      * The schematic model is stored within the DOM of the document
      * inside the SVG representing the current gEDA project (content of <geda-project>...</geda-project>).
@@ -49,8 +73,6 @@ Schematic = function(d3_parent, debug) {
      * </svg>
      */
      
-    // remember first component, so that new wires can be appended before
-//    this.firstComponent = null;
 };
 
 
@@ -82,6 +104,7 @@ Schematic.prototype.appendComponent = function(x, y, type)
     var c = this.viewport
                 .append('svg:g')
                     .attr('class', 'component')
+                    .attr('component', type)
                     .attr('transform', 'translate('+x+','+y+')');
 
     var rect = c
@@ -98,6 +121,8 @@ Schematic.prototype.appendComponent = function(x, y, type)
 
 Schematic.prototype.appendWire = function(x1,y1,x2,y2)
 {
+    console.log('appendWire');
+    console.log(this.viewport);
     var w = this.viewport
                 .insert('svg:g', ':first-child')
                     .attr('class', 'wire')
@@ -141,7 +166,7 @@ Schematic.prototype.fromGAF = function(src)
         // import component (except title)
         if (obj.type == GAF_OBJECT_COMPONENT && obj.basename != 'title-B.sym')
         {
-            this.appendComponent(obj.x*zoomX, obj.y*zoomY);
+            this.appendComponent(obj.x*zoomX, obj.y*zoomY, obj.basename);
         }
 
         // import wire ("net")

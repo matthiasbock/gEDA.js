@@ -71,11 +71,14 @@ function main()
     for (var i=0; i<lib.length; i++)
     {
         // import all components in library
-        var components = lib.find('geda-component');
+        var components = lib.find('geda-component[format="application/gaf"]');
         for (var j=0; j<components.length; j++)
         {
             components[j] = $(components[j]);
+
+            // hide GAF source
             components[j].css('display', 'none');
+
             var component = (new LibraryComponent()).fromGAF( components[j].html() );
             var c = component.exportDOM().insertAfter( components[j] );
             c.attr('component', components[j].attr('component'));
@@ -83,7 +86,7 @@ function main()
     }
     
     // Find and import all schematics
-    var schematic = $('geda-schematic');
+    var schematic = $('geda-schematic[format="application/gaf"]');
     for (var i=0; i<schematic.length; i++)
     {
         schematic[i] = $(schematic[i]);
@@ -101,16 +104,6 @@ function main()
             schematic[i].appendTo(container);
         }
 
-        // import model
-        var gaf = new GAF(schematic[i].html());
-
-        // add imported schematic to container
-        gaf.exportDOM(
-                $('<geda-schematic format="application/gaf-xml" style="display:none;"></geda-schematic>')
-                )
-            .insertAfter(schematic[i]);
-
-        // import schematic from GAF
-        (new Schematic(d3.select('geda-project'))).fromGAF(gaf);
+        new Schematic( schematic[i] );
     }
 };

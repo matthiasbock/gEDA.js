@@ -29,7 +29,12 @@ GAF_Object = function(s, text)
             // assign space separated parameters
             for (var i=0; i<objectType.length; i++)
             {
-                this[objectType[i]] = parameters[i];
+                try {
+                    var p = parseFloat(parameters[i]);
+                } catch (e) {
+                    var p = parameters[i];
+                }
+                this[objectType[i]] = isNaN(p) ? parameters[i] : p;
             }
             console.log(this);
         }
