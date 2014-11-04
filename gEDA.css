@@ -47,14 +47,21 @@ svg {
     stroke-dasharray: 5,3;
 }
 
+g.component
+{
+    /* always draw components over wires */ 
+    z-index: 20;
+}
+
 g.component > rect
 {
-    stroke: red;
-    fill: green;
+    stroke: #800000;
+    fill: #ffffb0;
 }
 
 g.wire > line
 {
-    stroke: black;
+    stroke: #000080;
     fill: transparent;
+    stroke-linecap: round;
 }

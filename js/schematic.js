@@ -43,6 +43,7 @@ Schematic = function(d3_parent, debug) {
                                 .attr('id', this.name)
                                 .style('width',width)
                                 .style('height',height);
+    
     // for svgpan
     this.viewport = this.svg.append('svg:g');
     this.viewport.attr('id','viewport');
@@ -173,8 +174,8 @@ Schematic.prototype.importFromGAF = function(gaf)
     {
         var obj = gaf.objects[i];
 
-        // import component
-        if (obj.type == GAF_OBJECT_COMPONENT)
+        // import component (except title)
+        if (obj.type == GAF_OBJECT_COMPONENT && obj.basename != 'title-B.sym')
         {
             this.appendComponent(obj.x*zoomX, obj.y*zoomY);
         }
