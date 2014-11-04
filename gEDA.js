@@ -1,19 +1,17 @@
 
-// Voltage units
-Volt = 1;
-mV = 0.001;
-
 /*
- * Logic levels
- * 
- * Read more:
- * https://de.wikipedia.org/wiki/Logikpegel
- * https://en.wikipedia.org/wiki/Logic_level
+ * Register new HTML elements
+ *
+ * http://www.w3.org/TR/custom-elements/
+ * http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
  */
-CMOS = 'CMOS';
-TTL = 'TTL';
+geda_project = document.registerElement('geda-project');
+geda_schematic = document.registerElement('geda-library');
+geda_schematic = document.registerElement('geda-schematic');
 
-PARSER_ROOT = 'js/parsers';
+
+SCRIPT_ROOT = 'js';
+PARSER_ROOT = SCRIPT_ROOT+'/parsers';
 
 //Capture JS errors from js files called using the $.getScript function
 $.extend({
@@ -27,13 +25,16 @@ $.extend({
 });
 
 $.getScript(PARSER_ROOT+'/gaf.js');
+$.getScript(SCRIPT_ROOT+'/schematic.js');
 
 /*
  * Stall execution of main, until all dependencies are resolved
  */
 var handle = window.setInterval(function()
                                 { 
-                                    if ( typeof GAF != 'undefined' && typeof GAF_Object != 'undefined' )
+                                    if ( typeof GAF != 'undefined'
+                                      && typeof GAF_Object != 'undefined' )
+//                                      && typeof 
                                     {
                                         window.clearInterval(handle);
                                         main();
@@ -62,23 +63,16 @@ function main()
         elmt[i].appendTo(container);
 
         // import model
-        schematics.push( new GAF(elmt[i].html()) );
+        var gaf = new GAF(elmt[i].html());
 
         // add imported schematic to container
         container.append(
-            schematics[i].exportDOM(
-                            $('<geda-schematic format="application/gaf-xml"></geda-schematic>')
-                            )
+            gaf.exportDOM( $('<geda-schematic format="application/gaf-xml"></geda-schematic>') )
         );
+
+        // import schematic from GAF
+        var schematic = new Schematic( d3.select('body') );
+        schematic.importFromGAF(gaf);
+        schematics.push(schematic);
     }
 };
-
-/*
- * Register <geda-schematic> as valid HTML element
- *
- * http://www.w3.org/TR/custom-elements/
- * http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
- */
-geda_schematic = document.registerElement('geda-schematic');
-
-// TODO: Register an element after it was created (onload) -> immediately pipe to importer

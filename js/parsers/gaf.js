@@ -4,9 +4,12 @@
  * GAF is the schematics and symbols format used by the gEDA suite EDA tools.
  *
  * Specification: http://wiki.geda-project.org/geda:file_format_spec
+ *
+ * This library only imports GAF from text. No object is created and filled with values.
  */
 
 // Dependencies
+$.getScript(PARSER_ROOT+'/gaf-constants.js')
 $.getScript(PARSER_ROOT+'/gaf-objects.js')
 
 /**

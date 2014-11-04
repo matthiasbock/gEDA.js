@@ -1,52 +1,8 @@
 
 /**
- * GAF object prototype
+ * GAF object
  */
 
-/*
- * Constants: Character defining the object's type
- */
-GAF_OBJECT_TYPES = {
-    'v': [
-        'version',
-        'version',
-        'fileformat_version'
-    ],
-    'T': [
-        'text',
-        'x',
-        'y',
-        'color',
-        'size',
-        'visibility',
-        'show_name_value',
-        'angle',
-        'alignment',
-        'num_lines'
-    ],
-    'N': [
-        'net',
-        'x1',
-        'y1',
-        'x2',
-        'y2',
-        'color'
-    ],
-    'C': [
-        'component',
-        'x',
-        'y',
-        'selectable',
-        'angle',
-        'mirror',
-        'basename'
-    ]
-};
-
-// an attribute is text + parsed text
-GAF_OBJECT_TYPES['attribute'] = GAF_OBJECT_TYPES['T'];
-GAF_OBJECT_TYPES['attribute'].push('name');
-GAF_OBJECT_TYPES['attribute'].push('value');
 
 /*
  * "GAF object" object
@@ -123,9 +79,11 @@ GAF_Object.prototype.parseAttributes = function(attrs)
             if (num_lines != 1)
                 console.error('Error: '+num_lines+' != 1. Should be one attribute per attribute object.');
 
+            // attributes are one line and one line only
             i++;
             var text = lines[i];
             var obj = new GAF_Object(line, text);
+            // attributes are name=value pairs
             if (text.indexOf('=') == -1)
             {
                 console.log('Error: Attribute name and value not separated by "=".');
@@ -176,7 +134,7 @@ GAF_Object.prototype.exportDOM = function()
             var attrType = GAF_OBJECT_TYPES['attribute'];
             for (var i=1; i<attrType.length; i++)
             {
-                console.log(attrType[i]);
+                //console.log(attrType[i]);
                 attr.attr(attrType[i], this.attributes[j][attrType[i]]);
             }
             

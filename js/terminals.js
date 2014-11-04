@@ -1,5 +1,6 @@
 
 numberOfTerminals = 0;
+terminalCircleRadius = 4;
 
 /*
  * Allowed terminal directions
