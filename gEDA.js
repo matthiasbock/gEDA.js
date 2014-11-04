@@ -9,7 +9,11 @@ geda_project = document.registerElement('geda-project');
 geda_schematic = document.registerElement('geda-library');
 geda_schematic = document.registerElement('geda-schematic');
 
+/*
+ * Resolve dependencies
+ */
 
+INCLUDE_ROOT = 'include';
 SCRIPT_ROOT = 'js';
 PARSER_ROOT = SCRIPT_ROOT+'/parsers';
 
@@ -24,7 +28,11 @@ $.extend({
     },
 });
 
+$.getScript(INCLUDE_ROOT+'/d3.v3.js');
+$.getScript(INCLUDE_ROOT+'/svgpan/jquery-svgpan.js');
+
 $.getScript(PARSER_ROOT+'/gaf.js');
+
 $.getScript(SCRIPT_ROOT+'/schematic.js');
 
 /*
@@ -33,13 +41,15 @@ $.getScript(SCRIPT_ROOT+'/schematic.js');
 var handle = window.setInterval(function()
                                 { 
                                     if ( typeof GAF != 'undefined'
-                                      && typeof GAF_Object != 'undefined' )
-//                                      && typeof 
+                                      && typeof GAF_Object != 'undefined'
+                                      && typeof d3 != 'undefined' 
+                                      )
                                     {
                                         window.clearInterval(handle);
                                         main();
                                     }
                                 }, 1000);
+
 
 /*
  * When document and all scripts are ready:
@@ -71,7 +81,7 @@ function main()
         );
 
         // import schematic from GAF
-        var schematic = new Schematic( d3.select('body') );
+        var schematic = new Schematic( d3.select('geda-project') );
         schematic.importFromGAF(gaf);
         schematics.push(schematic);
     }

@@ -98,7 +98,6 @@ GAF_OBJECT_TYPES = {
 
 // an attribute is text + parsed text
 GAF_OBJECT_TYPES['attribute'] = GAF_OBJECT_TYPES[GAF_OBJECT_TEXT];
-console.log(GAF_OBJECT_TYPES);
 GAF_OBJECT_TYPES['attribute'].push('name');
 GAF_OBJECT_TYPES['attribute'].push('value');
 

@@ -1,4 +1,22 @@
 
+/*
+ * Helper functions for drag'n'drop
+ */
+moveElement = function(element) {
+    console.log(element);
+    element
+        .attr('x', element.x + d3.event.dx)
+        .attr('y', element.y + d3.event.dy);
+};
+
+moveSchematic = function(schematic) {
+    var elements = schematic.svg.select('g');
+    console.log(elements);
+    for (var i=0; i<elements.length; i++)
+        moveElement(elements[i]);
+};
+
+
 numberOfSchematics = 0;
 
 /*
@@ -22,21 +40,13 @@ Schematic = function(d3_parent, debug) {
     var width = $('body').css('width');
     var height = parseInt($('body').css('height'))*0.8;
     this.svg = d3_parent.append("svg:svg")
-                                .attr('id', 'svg')
+                                .attr('id', this.name)
                                 .style('width',width)
                                 .style('height',height);
-
-    // overlay rectangle to catch drag'n' drop events    
-    this.rectMoveCanvas = this.svg.append('svg:rect')
-                                    .attr('class','rectMoveCanvas')
-                                    .attr('x',0)
-                                    .attr('y',0)
-                                    .attr('width',width)
-                                    .attr('height',height);
-
-    // attach drag'n'drop event handler
-    var self = this;
-    this.rectMoveCanvas.call(d3.behavior.drag().on("drag", function() { moveSchematic(self); } ));
+    // for svgpan
+    this.viewport = this.svg.append('svg:g');
+    this.viewport.attr('id','viewport');
+    $('svg#'+this.name).svgPan('viewport', true, true, true, 0.8);
 
     /*
      * The schematic model is stored within the DOM of the document
@@ -95,7 +105,7 @@ Schematic.prototype.newBoundingBox = function(width, height) {
 
 Schematic.prototype.clearSVG = function()
 {
-    this.svg.select('g').remove();
+    this.viewport.select('g').remove();
 }
 
 /*
@@ -113,26 +123,34 @@ Schematic.prototype.clearSVG = function()
  */
 Schematic.prototype.appendComponent = function(x, y, type)
 {
-    var c = this.svg.append('svg:g').attr('class', 'component');
-    var rect = c.append('svg:rect');
-    rect
-        .attr('x', x)
-        .attr('y', y)
-        .attr('width', '7px')
-        .attr('height', '7px');
+    var c = this.viewport
+                .append('svg:g')
+                    .attr('class', 'component')
+                    .attr('transform', 'translate('+x+','+y+')');
+
+    var rect = c
+                .append('svg:rect')
+                    .attr('x', '0')
+                    .attr('y', '0')
+                    .attr('width', '7px')
+                    .attr('height', '7px');
         
     // type: ignored, until component libraries are implemented
 }
 
 Schematic.prototype.appendWire = function(x1,y1,x2,y2)
 {
-    var w = this.svg.append('svg:g').attr('class', 'wire');
-    var line = w.append('svg:line');
-    line
-        .attr('x1', x1)
-        .attr('y1', y1)
-        .attr('x2', x2)
-        .attr('y2', y2);
+    var w = this.viewport
+                .append('svg:g')
+                    .attr('class', 'wire')
+                    .attr('transform', 'translate('+x1+','+y1+')');
+
+    var line = w
+                .append('svg:line')
+                    .attr('x1', '0')
+                    .attr('y1', '0')
+                    .attr('x2', x2-x1)
+                    .attr('y2', y2-y1);
 }
 
 
@@ -155,11 +173,13 @@ Schematic.prototype.importFromGAF = function(gaf)
     {
         var obj = gaf.objects[i];
 
+        // import component
         if (obj.type == GAF_OBJECT_COMPONENT)
         {
             this.appendComponent(obj.x*zoomX, obj.y*zoomY);
         }
 
+        // import wire ("net")
         else if (obj.type == GAF_OBJECT_NET)
         {
             this.appendWire(obj.x1*zoomX, obj.y1*zoomY, obj.x2*zoomX, obj.y2*zoomY);
