@@ -1,29 +1,11 @@
 
-/*
- * Helper functions for drag'n'drop
- */
-moveElement = function(element) {
-    console.log(element);
-    element
-        .attr('x', element.x + d3.event.dx)
-        .attr('y', element.y + d3.event.dy);
-};
-
-moveSchematic = function(schematic) {
-    var elements = schematic.svg.select('g');
-    console.log(elements);
-    for (var i=0; i<elements.length; i++)
-        moveElement(elements[i]);
-};
-
-
 numberOfSchematics = 0;
 
-/*
- * The schematic object stores a list of elements
- * and a link to the main SVG canvas
+/**
+ * Schematic interfaces the list of components and wires,
+ * which is stored directly in the DOM,
+ * with the user interface, i.e. actions on SVG elements.
  */
-
 Schematic = function(d3_parent, debug) {
     
     this.name = 'schematic'+(numberOfSchematics++);
@@ -40,13 +22,15 @@ Schematic = function(d3_parent, debug) {
     var width = $('body').css('width');
     var height = parseInt($('body').css('height'))*0.8;
     this.svg = d3_parent.append("svg:svg")
-                                .attr('id', this.name)
-                                .style('width',width)
-                                .style('height',height);
+                    .attr('xmlns', 'http://www.w3.org/2000/svg')
+                    .attr('id', this.name)
+                    .style('width', width)
+                    .style('height', height);
     
     // for svgpan
     this.viewport = this.svg.append('svg:g');
-    this.viewport.attr('id','viewport');
+    this.viewport
+        .attr('id','viewport');
     $('svg#'+this.name).svgPan('viewport', true, true, true, 0.8);
 
     /*
@@ -64,52 +48,23 @@ Schematic = function(d3_parent, debug) {
      *  </g>
      * </svg>
      */
-
-/*    this.grid = $('<g>')
-    this.grid.append()
-    this.svg.append(this.grid);*/
-    
+     
+    // remember first component, so that new wires can be appended before
+//    this.firstComponent = null;
 };
 
-Schematic.prototype.getName = function() {
-    return this.name;
-};
 
-Schematic.prototype.append = function(element) {
-    if (this.elements.indexOf(element) < 0)
-        this.elements.push(element);
-};
-
-Schematic.prototype.newCircleTerminal = function(css_class) {
-    return this.svg.append('svg:circle').attr('class','circleTerminal '+css_class).attr('r',terminalCircleRadius);
-};
-
-Schematic.prototype.newPathElement = function(id, d, css_class) {
-    if (typeof css_class == 'undefined')
-        css_class = 'pathElement';
-    var path = this.svg.append('svg:path').attr('class',css_class);
-    if (typeof id != 'undefined')
-        path.attr('id',id);
-    if (typeof d != 'undefined')
-        path.attr('d',d);
-    return path;
-};
-
-Schematic.prototype.newBoundingBox = function(width, height) {
-    var bbox = this.svg.append('svg:rect').attr('class','rectBoundingBox');
-    if (typeof width != 'undefined')
-        bbox.attr('width',width).attr('height',height);
-    else
-        bbox.attr('width',80).attr('height',60);
-    return bbox;
-};
-
+/**
+ * Remove all model-related elements from SVG
+ * (grid etc. remains) 
+ */
 Schematic.prototype.clearSVG = function()
 {
     this.viewport.select('g').remove();
 }
 
-/*
+
+/**
  * Append a component to the schematic
  * at position (x,y).
  * If a library is present and linked to the schematic (this.library)
@@ -137,12 +92,14 @@ Schematic.prototype.appendComponent = function(x, y, type)
                     .attr('height', '7px');
         
     // type: ignored, until component libraries are implemented
+
+    return c;
 }
 
 Schematic.prototype.appendWire = function(x1,y1,x2,y2)
 {
     var w = this.viewport
-                .append('svg:g')
+                .insert('svg:g', ':first-child')
                     .attr('class', 'wire')
                     .attr('transform', 'translate('+x1+','+y1+')');
 
@@ -152,14 +109,21 @@ Schematic.prototype.appendWire = function(x1,y1,x2,y2)
                     .attr('y1', '0')
                     .attr('x2', x2-x1)
                     .attr('y2', y2-y1);
+
+    return w;
 }
 
 
-/*
+/**
  * Import the whole schematic from an existing GAF model object
  */
-Schematic.prototype.importFromGAF = function(gaf)
+Schematic.prototype.fromGAF = function(src)
 {
+    if (typeof src == 'string')
+        var gaf = new GAF(src);
+    else
+        var gaf = src;
+    
     // remove all components and wires
     this.clearSVG();
 

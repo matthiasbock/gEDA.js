@@ -6,7 +6,8 @@
  * http://www.html5rocks.com/en/tutorials/webcomponents/customelements/
  */
 geda_project = document.registerElement('geda-project');
-geda_schematic = document.registerElement('geda-library');
+geda_library = document.registerElement('geda-library');
+geda_component = document.registerElement('geda-component');
 geda_schematic = document.registerElement('geda-schematic');
 
 /*
@@ -16,6 +17,10 @@ geda_schematic = document.registerElement('geda-schematic');
 INCLUDE_ROOT = 'include';
 SCRIPT_ROOT = 'js';
 PARSER_ROOT = SCRIPT_ROOT+'/parsers';
+
+// include stylesheet, if not included already
+if ($('head > link[href="gEDA.css"]').length == 0)
+    $('head').append('<link rel="stylesheet" type="text/css" href="gEDA.css"/>');
 
 //Capture JS errors from js files called using the $.getScript function
 $.extend({
@@ -34,6 +39,7 @@ $.getScript(INCLUDE_ROOT+'/svgpan/jquery-svgpan.js');
 $.getScript(PARSER_ROOT+'/gaf.js');
 
 $.getScript(SCRIPT_ROOT+'/schematic.js');
+$.getScript(SCRIPT_ROOT+'/library.js');
 
 /*
  * Stall execution of main, until all dependencies are resolved
@@ -42,7 +48,8 @@ var handle = window.setInterval(function()
                                 { 
                                     if ( typeof GAF != 'undefined'
                                       && typeof GAF_Object != 'undefined'
-                                      && typeof d3 != 'undefined' 
+                                      && typeof LibraryComponent != 'undefined'
+                                      && typeof d3 != 'undefined'
                                       )
                                     {
                                         window.clearInterval(handle);
@@ -57,32 +64,53 @@ var handle = window.setInterval(function()
  */
 function main()
 {
-    var schematics = [];
-    var elmt = $('geda-schematic');
-    console.log(elmt.length+' schematic(s) found in document.');
-    for (var i=0; i<elmt.length; i++)
+    // Find and import all component libraries
+    var lib = $('geda-library');
+    // don't show the library content on the page
+//    lib.css('display', 'none');
+    for (var i=0; i<lib.length; i++)
     {
-        elmt[i] = $(elmt[i]);
+        // import all components in library
+        var components = lib.find('geda-component');
+        for (var j=0; j<components.length; j++)
+        {
+            components[j] = $(components[j]);
+            components[j].css('display', 'none');
+            var component = (new LibraryComponent()).fromGAF( components[j].html() );
+            var c = component.exportDOM().insertAfter( components[j] );
+            c.attr('component', components[j].attr('component'));
+        } 
+    }
+    
+    // Find and import all schematics
+    var schematic = $('geda-schematic');
+    for (var i=0; i<schematic.length; i++)
+    {
+        schematic[i] = $(schematic[i]);
 
         // hide unimported model
-        elmt[i].css('display','none');
+        schematic[i].css('display','none');
 
-        // put everything related to this schematic in a separate container
-        var container = $('<geda-project/>');
-        container.insertAfter(elmt[i]);
-        elmt[i].appendTo(container);
+        // put schematic in separate <geda-project> container
+        var container = schematic[i].parent();
+        // if not already in one 
+        if (container.prop('tagName').toUpperCase() != 'GEDA-PROJECT')
+        {
+            var container = $('<geda-project/>');
+            container.insertAfter(schematic[i]);
+            schematic[i].appendTo(container);
+        }
 
         // import model
-        var gaf = new GAF(elmt[i].html());
+        var gaf = new GAF(schematic[i].html());
 
         // add imported schematic to container
-        container.append(
-            gaf.exportDOM( $('<geda-schematic format="application/gaf-xml"></geda-schematic>') )
-        );
+        gaf.exportDOM(
+                $('<geda-schematic format="application/gaf-xml" style="display:none;"></geda-schematic>')
+                )
+            .insertAfter(schematic[i]);
 
         // import schematic from GAF
-        var schematic = new Schematic( d3.select('geda-project') );
-        schematic.importFromGAF(gaf);
-        schematics.push(schematic);
+        (new Schematic(d3.select('geda-project'))).fromGAF(gaf);
     }
 };

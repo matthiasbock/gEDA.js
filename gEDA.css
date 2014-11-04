@@ -47,10 +47,9 @@ svg {
     stroke-dasharray: 5,3;
 }
 
-g.component
+geda-component > svg line
 {
-    /* always draw components over wires */ 
-    z-index: 20;
+    stroke: black;
 }
 
 g.component > rect

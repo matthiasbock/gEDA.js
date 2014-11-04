@@ -15,19 +15,22 @@ $.getScript(PARSER_ROOT+'/gaf-objects.js')
 /**
  * Object GAF: parse string to GAF object
  */
-GAF = function(s) {
+GAF = function(s)
+{
 
     this.objects = [];
 
     if (typeof s != 'undefined')
-        this.importFromString(s);
+        this.fromString(s);
     
 };
 
 /**
  * Import GAF object from GAF schematic (string)
  */
-GAF.prototype.importFromString = function(s) {
+GAF.prototype.fromString = function(s)
+{
+    console.log('Importing GAF from string ...');
 
     // start with an empty list of objects
     this.objects = [];
@@ -101,4 +104,20 @@ GAF.prototype.exportDOM = function(parent)
 
     // return DOM object
     return parent;
+}
+
+/**
+ * Return an array of objects matching the filter object type
+ */
+GAF.prototype.filterType = function(filter)
+{
+    var results = [];
+    
+    for (var i=0; i<this.objects.length; i++)
+    {
+        if (this.objects[i].type == filter)
+            results.push(this.objects[i]);
+    }
+
+    return results;
 }
