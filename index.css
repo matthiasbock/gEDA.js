@@ -46,3 +46,15 @@ svg {
     stroke: gray;
     stroke-dasharray: 5,3;
 }
+
+g.component > rect
+{
+    stroke: red;
+    fill: green;
+}
+
+g.wire > line
+{
+    stroke: black;
+    fill: transparent;
+}

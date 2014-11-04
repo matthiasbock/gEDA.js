@@ -4,6 +4,20 @@
  */
 
 // Single character at the beginning of each GAF line determines the object type
+GAF_OBJECT_VERSION   = 'v';
+GAF_OBJECT_LINE      = 'L';
+GAF_OBJECT_PICTURE   = 'G';
+GAF_OBJECT_BOX       = 'B';
+GAF_OBJECT_CIRCLE    = 'V';
+GAF_OBJECT_ARC       = 'A';
+GAF_OBJECT_TEXT      = 'T';
+GAF_OBJECT_NET       = 'N';
+GAF_OBJECT_BUS       = 'U';
+GAF_OBJECT_PIN       = 'P';
+GAF_OBJECT_COMPONENT = 'C';
+GAF_OBJECT_PATH      = 'H';
+GAF_OBJECT_FONT      = 'F';
+
 GAF_OBJECT_TYPES = {
     'v': [
         'version',
@@ -83,19 +97,22 @@ GAF_OBJECT_TYPES = {
 };
 
 // an attribute is text + parsed text
-GAF_OBJECT_TYPES['attribute'] = GAF_OBJECT_TYPES['T'];
+GAF_OBJECT_TYPES['attribute'] = GAF_OBJECT_TYPES[GAF_OBJECT_TEXT];
+console.log(GAF_OBJECT_TYPES);
 GAF_OBJECT_TYPES['attribute'].push('name');
 GAF_OBJECT_TYPES['attribute'].push('value');
 
-// line specific
+// line specific properties
 GAF_CAPSTYLE_NONE   = 0;
 GAF_CAPSTYLE_SQUARE = 1;
 GAF_CAPSTYLE_ROUND  = 2;
+
 GAF_DASHSTYLE_SOLID   = 0;
 GAF_DASHSTYLE_DOTTED  = 1;
 GAF_DASHSTYLE_DASHED  = 2;
 GAF_DASHSTYLE_CENTER  = 3;
 GAF_DASHSTYLE_PHANTOM = 4;
+
 GAF_FILLTYPE_HOLLOW = 0;
 GAF_FILLTYPE_FILL   = 1;
 GAF_FILLTYPE_MESH   = 2;

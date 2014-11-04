@@ -92,3 +92,77 @@ Schematic.prototype.newBoundingBox = function(width, height) {
         bbox.attr('width',80).attr('height',60);
     return bbox;
 };
+
+Schematic.prototype.clearSVG = function()
+{
+    this.svg.select('g').remove();
+}
+
+/*
+ * Append a component to the schematic
+ * at position (x,y).
+ * If a library is present and linked to the schematic (this.library)
+ * then "type" can be the name of the component prototype in the library
+ * to import into the schematic.
+ * If no library prototype is found, a simple rectangle is used. 
+ *
+ * Components are SVG groups (<g type="component">...</g>),
+ * grouping all elements that visually represent the component.
+ * Component parameters are stored as XML parameters to <g>,
+ * e.g. <g type="component" component="resistor" resistance="4.7k">...</g>
+ */
+Schematic.prototype.appendComponent = function(x, y, type)
+{
+    var c = this.svg.append('svg:g').attr('class', 'component');
+    var rect = c.append('svg:rect');
+    rect
+        .attr('x', x)
+        .attr('y', y)
+        .attr('width', '7px')
+        .attr('height', '7px');
+        
+    // type: ignored, until component libraries are implemented
+}
+
+Schematic.prototype.appendWire = function(x1,y1,x2,y2)
+{
+    var w = this.svg.append('svg:g').attr('class', 'wire');
+    var line = w.append('svg:line');
+    line
+        .attr('x1', x1)
+        .attr('y1', y1)
+        .attr('x2', x2)
+        .attr('y2', y2);
+}
+
+
+/*
+ * Import the whole schematic from an existing GAF model object
+ */
+Schematic.prototype.importFromGAF = function(gaf)
+{
+    // remove all components and wires
+    this.clearSVG();
+
+    // schematics from gschem are too big for the average screen
+    var zoomX = 1/100, zoomY = zoomX;
+
+    /*
+     * Import GAF objects:
+     * For now, GAF objects can be only C (components) or N (net, actually wires)
+     */
+    for (var i=0; i<gaf.objects.length; i++)
+    {
+        var obj = gaf.objects[i];
+
+        if (obj.type == GAF_OBJECT_COMPONENT)
+        {
+            this.appendComponent(obj.x*zoomX, obj.y*zoomY);
+        }
+
+        else if (obj.type == GAF_OBJECT_NET)
+        {
+            this.appendWire(obj.x1*zoomX, obj.y1*zoomY, obj.x2*zoomX, obj.y2*zoomY);
+        }
+    }
+}
