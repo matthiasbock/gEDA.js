@@ -216,7 +216,8 @@ Schematic.prototype.fromGAF = function(src)
         zoomY = svgHeight / gafHeight,
         zoom = d3.min([zoomX,zoomY]);
     console.log('Fitting schematic to screen:');
-    console.log('Zooming viewport by a factor of '+zoom+'.');
     console.log('Translating viewport by ('+(-gaf.minX)+','+(-gaf.minY)+')');
+    console.log('Flipping Y axis and translating back into visible screen.');
+    console.log('Zooming viewport by a factor of '+zoom+'.');
     this.viewport.attr('transform', 'scale('+zoom+','+(-zoom)+') translate(0,'+1.25*(-gafHeight)+') translate('+(-gaf.minX)+','+(-gaf.minY)+')');
 }

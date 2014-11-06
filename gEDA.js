@@ -34,7 +34,7 @@ $.extend({
 });
 
 $.getScript(INCLUDE_ROOT+'/d3.v3.js');
-$.getScript(INCLUDE_ROOT+'/svgpan/jquery-svgpan.js');
+$.getScript(INCLUDE_ROOT+'/jquery-svgpan.js');
 
 $.getScript(PARSER_ROOT+'/gaf.js');
 
