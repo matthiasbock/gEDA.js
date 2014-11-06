@@ -11,7 +11,7 @@
 GAF_Object = function(s, text)
 {
     s = s.trim();
-    console.log('New GAF object: '+s);
+    console.log('Parsing GAF object from string "'+s+'":');
 
     // first character: type
     this.type = s.substr(0,1);

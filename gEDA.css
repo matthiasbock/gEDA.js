@@ -47,27 +47,48 @@ svg {
     stroke-dasharray: 5,3;
 }
 
-geda-component > svg line.line
+/*
+ * Source code elements are invisible
+ */
+geda-library,
+geda-component,
+geda-schematic
+{
+    display: none;
+}
+
+/*
+ * How to render elements in a library (if visible)
+ * and in a schematic
+ */
+ 
+geda-component line.line,
+svg.schematic g.component line.line
 {
     stroke: black;
 }
-geda-component > svg line.pin
+
+geda-component line.pin,
+svg.schematic g.component line.pin
 {
     stroke: red;
 }
-geda-component > svg rect
+
+geda-component rect,
+svg.schematic g.component rect
 {
     stroke: black;
     fill: white;
 }
 
-g.component > rect
+geda-component rect.ic,
+svg.schematic g.component rect.ic
 {
     stroke: #800000;
     fill: #ffffb0;
 }
 
-g.wire > line
+svg.schematic line.wire
 {
     stroke: #000080;
     fill: transparent;

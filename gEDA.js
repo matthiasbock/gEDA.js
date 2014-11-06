@@ -66,8 +66,6 @@ function main()
 {
     // Find and import all component libraries
     var lib = $('geda-library');
-    // don't show the library content on the page
-//    lib.css('display', 'none');
     for (var i=0; i<lib.length; i++)
     {
         // import all components in library
@@ -75,10 +73,6 @@ function main()
         for (var j=0; j<components.length; j++)
         {
             components[j] = $(components[j]);
-
-            // hide GAF source
-            components[j].css('display', 'none');
-
             var component = (new LibraryComponent()).fromGAF( components[j].html() );
             var c = component.exportDOM().insertAfter( components[j] );
             c.attr('component', components[j].attr('component'));
@@ -90,9 +84,6 @@ function main()
     for (var i=0; i<schematic.length; i++)
     {
         schematic[i] = $(schematic[i]);
-
-        // hide unimported model
-        schematic[i].css('display','none');
 
         // put schematic in separate <geda-project> container
         var container = schematic[i].parent();
@@ -107,3 +98,16 @@ function main()
         new Schematic( schematic[i] );
     }
 };
+
+
+/*
+ * There's a bug of unknown origin, see GitHub issue 1
+ * https://github.com/matthiasbock/gEDA.js/issues/1
+ *
+ * Temporary workaround:
+ * Regularly remove misplaced transform attributes from schematic elements
+ */
+window.setInterval(function()
+{
+    $('svg.schematic line, svg.schematic rect').attr('transform', null);
+}, 1000);

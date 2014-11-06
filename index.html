@@ -6,6 +6,7 @@
 </head>
 
 <body>
+
 <!--
 gEDA/gaf is a FOSS format for schematics.
 It is used by the gEDA suite.
@@ -14,8 +15,10 @@ Parser is at js/parsers/gaf.js
 
 gEDA.js will import the <geda-schematic> below and replace it with an SVG, rendering the contained schematic. 
 -->
+
 <geda-project>
-Demo project, GAF exported from GSchem:<br/>
+
+Example schematic, a circuit with a battery, resistor and LED (GAF file created with GSchem):<br/>
 <geda-schematic format="application/gaf">
 v 20130925 2
 C 40000 40000 0 0 0 title-B.sym
@@ -49,9 +52,7 @@ N 45700 45000 45700 46300 4
 N 45700 47200 45700 47900 4
 N 45700 47900 46900 47900 4
 </geda-schematic>
-<br/>
-<hr>
-Component library:<br/>
+
 <geda-library>
 <geda-component component="battery-1.sym" format="application/gaf">
 v 20050820 1
@@ -168,7 +169,9 @@ T 950 450 5 10 0 0 0 0 1
 numslots=0
 </geda-component>
 </geda-library>
+
 </geda-project>
+
 </body>
 
 </html>

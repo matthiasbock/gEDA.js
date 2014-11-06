@@ -29,6 +29,7 @@ Schematic = function(source) {
     var height = parseInt($('body').css('height'))*0.8;
     this.svg = d3_parent.append("svg:svg")
                     .attr('xmlns', 'http://www.w3.org/2000/svg')
+                    .attr('class', 'schematic')
                     .attr('id', this.name)
                     .style('width', width)
                     .style('height', height);
@@ -99,37 +100,57 @@ Schematic.prototype.clearSVG = function()
  * Component parameters are stored as XML parameters to <g>,
  * e.g. <g type="component" component="resistor" resistance="4.7k">...</g>
  */
-Schematic.prototype.appendComponent = function(x, y, type)
+Schematic.prototype.appendComponent = function(type, x, y, angle)
 {
     var c = this.viewport
                 .append('svg:g')
                     .attr('class', 'component')
                     .attr('component', type)
-                    .attr('transform', 'translate('+x+','+y+')');
+                    .attr('transform', 'translate('+x+','+y+') scale(0.01)');
 
-    var rect = c
-                .append('svg:rect')
-                    .attr('x', '0')
-                    .attr('y', '0')
-                    .attr('width', '7px')
-                    .attr('height', '7px');
+    // determine, whether this component type is in the library
+    var libComponent = $('geda-component[component="'+type+'"][format="image/svg+xml"]');
+    if (libComponent.length > 0)
+    {
+        // just take the first one, even if there are several prototypes available
+        libComponent = $(libComponent[0]);
+
+        console.log('Found library component for "'+type+'":');
+        console.log(libComponent);
+
+        c.html(libComponent.find('svg > g:first').html());
         
-    // type: ignored, until component libraries are implemented
+        // apply rotation
+        if (typeof angle != 'undefined' && angle > 0)
+        {
+            c.attr('transform', c.attr('transform')+' rotate('+angle+')');
+        }
+    } else {
+        // if not in library, add an empty rectangle
+        console.error('Warning: No component "'+type+'" in library. Using empty rectangle instead.');
+        var rect = c
+                    .append('svg:rect')
+                        .attr('x', '0')
+                        .attr('y', '0')
+                        .attr('width', '700px')
+                        .attr('height', '700px');
+    }
 
     return c;
 }
 
 Schematic.prototype.appendWire = function(x1,y1,x2,y2)
 {
-    console.log('appendWire');
-    console.log(this.viewport);
+    // insert wires before other components, so that components are drawn over wires
     var w = this.viewport
                 .insert('svg:g', ':first-child')
                     .attr('class', 'wire')
                     .attr('transform', 'translate('+x1+','+y1+')');
 
+    // draw wires as simple lines
     var line = w
                 .append('svg:line')
+                    .attr('class', 'wire')
                     .attr('x1', '0')
                     .attr('y1', '0')
                     .attr('x2', x2-x1)
@@ -166,7 +187,7 @@ Schematic.prototype.fromGAF = function(src)
         // import component (except title)
         if (obj.type == GAF_OBJECT_COMPONENT && obj.basename != 'title-B.sym')
         {
-            this.appendComponent(obj.x*zoomX, obj.y*zoomY, obj.basename);
+            this.appendComponent(obj.basename, obj.x*zoomX, obj.y*zoomY, obj.angle);
         }
 
         // import wire ("net")
