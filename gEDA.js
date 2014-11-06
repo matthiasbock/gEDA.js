@@ -34,7 +34,9 @@ $.extend({
 });
 
 $.getScript(INCLUDE_ROOT+'/d3.v3.js');
-$.getScript(INCLUDE_ROOT+'/jquery-svgpan.js');
+svgpan = false;
+if (svgpan)
+    $.getScript(INCLUDE_ROOT+'/jquery-svgpan.js');
 
 $.getScript(PARSER_ROOT+'/gaf.js');
 
@@ -107,7 +109,7 @@ function main()
  * Temporary workaround:
  * Regularly remove misplaced transform attributes from schematic elements
  */
-window.setInterval(function()
+/*window.setInterval(function()
 {
     $('svg.schematic line, svg.schematic rect').attr('transform', null);
-}, 1000);
+}, 1000);*/

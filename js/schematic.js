@@ -1,6 +1,25 @@
 
 numberOfSchematics = 0;
 
+
+translate = function(transform, dx, dy)
+{
+    // use regular expression to parse the original values from transform attribute
+    var parts  = /translate\(\s*([^\s,)]+)[ ,]([^\s,)]+)\)/.exec(transform);
+    var x = parseFloat(parts[1]),
+        y = parseFloat(parts[2]);
+
+    // new, translated transform attribute
+    var t = 'translate('+(x+dx)+','+(y+dy)+')';
+
+    // if there was a rotate in original transform, keep it
+    var parts = /rotate\(([^\s,)]+)\)/.exec(transform);
+    if (parts != null && parts.length > 0)
+        t += ' rotate('+parts[1]+')';
+
+    return t;
+}
+
 /**
  * Schematic interfaces the list of components and wires,
  * which is stored directly in the DOM,
@@ -38,7 +57,8 @@ Schematic = function(source) {
     this.viewport = this.svg.append('svg:g');
     this.viewport
         .attr('id','viewport');
-    $('svg#'+this.name).svgPan('viewport', true, true, true, 0.8);
+    if (svgpan)
+        $('svg#'+this.name).svgPan('viewport', true, true, true, 0.8);
 
     if (typeof source != 'undefined')
     {
@@ -137,19 +157,28 @@ Schematic.prototype.appendComponent = function(type, x, y, angle)
     }
 
     /*
-     * Append a bounding box
+     * Append a rectangle as bounding box
      */
-    console.log(c);
-    var brect = c[0][0].getBBox(),
-        width = brect.width,
-        height = brect.height,
+    var bbox = c[0][0].getBBox(),
+        width = bbox.width,
+        height = bbox.height,
         margin = 50;
-    c.append('svg:rect')
+    this.bbox = c.append('svg:rect')
         .attr('class','bbox')
         .attr('x', 0-margin)
         .attr('y', 0-margin)
         .attr('width', width+2*margin)
         .attr('height', height+2*margin);
+
+
+    // https://github.com/mbostock/d3/wiki/Drag-Behavior
+    c.call(
+        d3.behavior.drag().on("drag", function()
+        {
+            var g = d3.select(this);
+            g.attr('transform', translate(g.attr('transform'), d3.event.dx, d3.event.dy));
+        })
+    ); // closure
 
     return c;
 }
