@@ -132,9 +132,9 @@ GAF.prototype.fromString = function(s)
 /*
  * Move model by (deltaX,deltaY)
  */
-GAF.prototype.shift = function(deltaX,deltaY)
+GAF.prototype.translate = function(deltaX,deltaY)
 {
-    console.log('Shifting GAF schematic by ('+deltaX+','+deltaY+') ...');
+    console.log('Shifting GAF schematic by ('+deltaX+','+deltaY+').');
     
     // shift all objects
     for (var i=0; i<this.objects.length; i++)
@@ -154,9 +154,11 @@ GAF.prototype.shift = function(deltaX,deltaY)
             obj.x += deltaX; obj.y += deltaY;
         }
 
-        // invalid object type for shift        
-        else {
-            console.error('Failed to shfit object:');
+        // disregard non-moveable objects
+        else if ([GAF_OBJECT_VERSION].indexOf(obj.type) == -1)
+        {
+            // all other objects: something went wrong        
+            console.error('Failed to shift object:');
             console.error(obj);
         }
     }
@@ -171,9 +173,17 @@ GAF.prototype.shift = function(deltaX,deltaY)
 /*
  * Use min/max coordinates from import to shift model to (0,0)
  */  
-GAF.prototype.crop = function()
+GAF.prototype.center = function()
 {
-    this.shift(-this.minX, -this.minY);
+    if (this.minX != 0 || this.minY != 0)
+        this.translate(-this.minX, -this.minY);
+}
+
+/*
+ * Coordinate system for gEDA.js is different from GAF's
+ */
+GAF.prototype.flipY = function()
+{
 }
 
 /*

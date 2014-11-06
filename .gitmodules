@@ -1,3 +1,0 @@
-[submodule "svgpan"]
-	path = include/svgpan
-	url = git@github.com:talos/jquery-svgpan.git

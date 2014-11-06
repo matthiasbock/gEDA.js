@@ -169,17 +169,12 @@ Schematic.prototype.fromGAF = function(src)
         var gaf = new GAF(src);
     else
         var gaf = src;
+
+    gaf.center();
     
     // remove all components and wires
     this.clearSVG();
-
-    // shift schematic to (0,0) 
-    var svg = $(this.svg[0]),
-        width = svg.css('width').replace('px',''),
-        height = svg.css('height').replace('px','');
-    if (gaf.minX != 0 || gaf.minY != 0)
-        gaf.shift(width-gaf.minX, height-gaf.minY);
-
+    
     /*
      * Import GAF objects:
      * For now, GAF objects can be only C (components) or N (net, actually wires)
@@ -205,10 +200,23 @@ Schematic.prototype.fromGAF = function(src)
     this.viewport.style('width', gaf.maxX+100);
     this.viewport.style('height', gaf.maxY+100);
     
-    // scale viewport to display all elements on visible canvas
-    var zoomX = width / gaf.maxX,
-        zoomY = height / gaf.maxY,
+    console.log('GAF schematic dimensions:');
+    console.log('MinX: '+gaf.minX);
+    console.log('MinY: '+gaf.minY);
+    console.log('MaxX: '+gaf.maxX);
+    console.log('MaxY: '+gaf.maxY);
+    
+    // scale and translate viewport to display all elements on screen
+    var svg = $(this.svg[0]),
+        svgWidth = svg.css('width').replace('px',''),
+        svgHeight = svg.css('height').replace('px',''),
+        gafWidth = gaf.maxX-gaf.minX,
+        gafHeight = gaf.maxY-gaf.minY,
+        zoomX = svgWidth / gafWidth,
+        zoomY = svgHeight / gafHeight,
         zoom = d3.min([zoomX,zoomY]);
-    console.log('Zooming viewport by a factor of '+zoom);
-    this.viewport.attr('transform', 'scale('+zoom+')');
+    console.log('Fitting schematic to screen:');
+    console.log('Zooming viewport by a factor of '+zoom+'.');
+    console.log('Translating viewport by ('+(-gaf.minX)+','+(-gaf.minY)+')');
+    this.viewport.attr('transform', 'scale('+zoom+','+(-zoom)+') translate(0,'+1.25*(-gafHeight)+') translate('+(-gaf.minX)+','+(-gaf.minY)+')');
 }

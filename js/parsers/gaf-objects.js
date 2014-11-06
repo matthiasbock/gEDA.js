@@ -1,12 +1,9 @@
 
-/**
- * GAF object
- */
-
-
 /*
- * "GAF object" object
- * Usually one object per line
+ * GAF object
+ *
+ * A GAF file consists of a number of objects of different types,
+ * usually one object per line
  */
 GAF_Object = function(s, text)
 {
