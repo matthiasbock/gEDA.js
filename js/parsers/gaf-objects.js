@@ -18,7 +18,6 @@ GAF_Object = function(s, text)
     // rest of the line: parameters
     parameters = s.split(' ');
     // optionally following lines in {}: attributes
-    this.attributes = null;
     
     if (this.type in GAF_OBJECT_TYPES)
     {
@@ -63,7 +62,7 @@ GAF_Object = function(s, text)
  */
 GAF_Object.prototype.parseAttributes = function(attrs)
 {
-    this.attributes = [];
+    this.attributes = {};
     var lines = attrs.split('\n');
     var i = 0;
     while (i < lines.length)
@@ -74,7 +73,7 @@ GAF_Object.prototype.parseAttributes = function(attrs)
             // attributes can only be Text
             if (line.substr(0,1) != 'T')
             {
-                console.error('Error: Expected text, got "'+line.substr(0,1)+'", in violation of http://wiki.geda-project.org/geda:file_format_spec#attributes');
+                console.error('Error: Expected text, got "'+line.substr(0,1)+'".');
                 return; // must abort here, because text parsing below will fail
             }
     
@@ -82,27 +81,28 @@ GAF_Object.prototype.parseAttributes = function(attrs)
             var p = line.split(' ');
             var num_lines = p[p.length-1];
             if (num_lines != 1)
-                console.error('Error: '+num_lines+' != 1. Should be one attribute per attribute object.');
+            {
+                console.error('Warning: Expected one attribute line, got '+num_lines+'.');
+                // this will cause errors below, but aborting will not rescue the problem
+            }
 
             // attributes are one line and one line only
-            i++;
-            var text = lines[i];
-            var obj = new GAF_Object(line, text);
+            var text = lines[++i], key="", value="";
             // attributes are name=value pairs
             if (text.indexOf('=') == -1)
             {
-                console.log('Error: Attribute name and value not separated by "=".');
-                obj.name = text;
-                obj.value = '';
+                console.error('Warning: Attribute name and value not separated by "=" in "'+text+'"');
+                key = text;
+                value = '';
             }
             else {
                 var s = text.split('=');
-                obj.name = s[0];
-                obj.value = s.length > 1 ? s[1] : '';
+                key = s[0];
+                value = s.length > 1 ? s[1] : '';
             }
     
-            // append text element to list        
-            this.attributes.push(obj);
+            // append parsed attribute to dictionary        
+            this.attributes[key] = value;
         }
         
         // continue iterating through attributes lines

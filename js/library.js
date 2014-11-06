@@ -79,12 +79,12 @@ LibraryComponent.prototype.exportDOM = function()
     {
         var l = this.lines[i];
         g.append('svg:line')
-            .attr('class', 'line')
+            .attr('class', 'symbol')
             .attr('x1', l.x1)
             .attr('y1', l.y1)
             .attr('x2', l.x2)
-            .attr('y2', l.y2)
-            .style('stroke-width', l.linewidth+1);
+            .attr('y2', l.y2);
+//            .style('stroke-width', l.linewidth+1);
     }
     // export pins
     for (var i=0; i<this.pins.length; i++)
@@ -102,6 +102,7 @@ LibraryComponent.prototype.exportDOM = function()
     {
         var r = this.rects[i];
         g.append('svg:rect')
+            .attr('class', 'symbol')
             .attr('x', r.x)
             .attr('y', r.y)
             .attr('width', r.width)

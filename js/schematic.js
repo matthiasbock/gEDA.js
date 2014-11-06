@@ -106,13 +106,13 @@ Schematic.prototype.appendComponent = function(type, x, y, angle)
                 .append('svg:g')
                     .attr('class', 'component')
                     .attr('component', type)
-                    .attr('transform', 'translate('+x+','+y+') scale(0.01)');
+                    .attr('transform', 'translate('+x+','+y+')');
 
     // determine, whether this component type is in the library
     var libComponent = $('geda-component[component="'+type+'"][format="image/svg+xml"]');
     if (libComponent.length > 0)
     {
-        // just take the first one, even if there are several prototypes available
+        // if there are several prototypes available, just pick the first one
         libComponent = $(libComponent[0]);
 
         console.log('Found library component for "'+type+'":');
@@ -173,8 +173,12 @@ Schematic.prototype.fromGAF = function(src)
     // remove all components and wires
     this.clearSVG();
 
-    // schematics from gschem are too big for the average screen
-    var zoomX = 1/100, zoomY = zoomX;
+    // shift schematic to (0,0) 
+    var svg = $(this.svg[0]),
+        width = svg.css('width').replace('px',''),
+        height = svg.css('height').replace('px','');
+    if (gaf.minX != 0 || gaf.minY != 0)
+        gaf.shift(width-gaf.minX, height-gaf.minY);
 
     /*
      * Import GAF objects:
@@ -187,13 +191,24 @@ Schematic.prototype.fromGAF = function(src)
         // import component (except title)
         if (obj.type == GAF_OBJECT_COMPONENT && obj.basename != 'title-B.sym')
         {
-            this.appendComponent(obj.basename, obj.x*zoomX, obj.y*zoomY, obj.angle);
+            this.appendComponent(obj.basename, obj.x, obj.y, obj.angle);
         }
 
         // import wire ("net")
         else if (obj.type == GAF_OBJECT_NET)
         {
-            this.appendWire(obj.x1*zoomX, obj.y1*zoomY, obj.x2*zoomX, obj.y2*zoomY);
+            this.appendWire(obj.x1, obj.y1, obj.x2, obj.y2);
         }
     }
+
+    // make sure, the model is within the borders of the viewport
+    this.viewport.style('width', gaf.maxX+100);
+    this.viewport.style('height', gaf.maxY+100);
+    
+    // scale viewport to display all elements on visible canvas
+    var zoomX = width / gaf.maxX,
+        zoomY = height / gaf.maxY,
+        zoom = d3.min([zoomX,zoomY]);
+    console.log('Zooming viewport by a factor of '+zoom);
+    this.viewport.attr('transform', 'scale('+zoom+')');
 }

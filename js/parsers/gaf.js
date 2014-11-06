@@ -19,6 +19,10 @@ GAF = function(s)
 {
 
     this.objects = [];
+    this.minX = 0;
+    this.maxX = 0;
+    this.minY = 0;
+    this.maxY = 0;
 
     if (typeof s != 'undefined')
         this.fromString(s);
@@ -34,8 +38,14 @@ GAF.prototype.fromString = function(s)
 
     // start with an empty list of objects
     this.objects = [];
+    x = [];
+    y = [];
     
-    // GAF is one object per line, except for attributes blocks, which are enclosed by {}
+    /*
+     * GAF schematics are text and define one object per line
+     * except for attributes blocks, which are enclosed by {}
+     * and embedded components, which are enclosed by []
+     */
     var lines = s.split('\n');
     for (var i=0; i<lines.length; i++)
     {
@@ -48,9 +58,10 @@ GAF.prototype.fromString = function(s)
             {
                 // make a string from attributes section and parse it
                 var attrs = '';
-                // do not include {}
+                // neither include the leading "{"
                 i++;
                 line = lines[i].trim();
+                // nor the trailing "}"
                 while (line.indexOf('}') == -1)
                 {
                     attrs += line+'\n';
@@ -85,11 +96,85 @@ GAF.prototype.fromString = function(s)
                 }
                 
                 // create new GAF object from line string and append to objects array
-                this.objects.push( new GAF_Object(line, text) );
+                var obj = new GAF_Object(line, text);
+                this.objects.push(obj);
+
+                // object has x1,y1,x2,y2
+                if ([GAF_OBJECT_LINE, GAF_OBJECT_NET, GAF_OBJECT_BUS, GAF_OBJECT_PIN].indexOf(obj.type) > -1)
+                {
+                    x.push(obj.x1); y.push(obj.y1);
+                    x.push(obj.x2); y.push(obj.y2);
+                }
+                
+                // object has x,y,width,height
+                else if ([GAF_OBJECT_PICTURE,GAF_OBJECT_BOX].indexOf(obj.type) > -1)
+                {
+                    x.push(obj.x); y.push(obj.y);
+                    x.push(obj.x+obj.width); y.push(obj.y+obj.height);
+                }
+                
+                // object has x,y
+                else if ([GAF_OBJECT_TEXT,GAF_OBJECT_COMPONENT,GAF_OBJECT_ARC,GAF_OBJECT_CIRCLE].indexOf(obj.type) > -1)
+                {
+                    x.push(obj.x); y.push(obj.y);
+                }
             }
         }
     }
+    
+    // calculate minimum and maximum coordinates of this component
+    this.minX = d3.min(x);
+    this.maxX = d3.max(x);
+    this.minY = d3.min(y);
+    this.maxY = d3.max(y);
 };
+
+/*
+ * Move model by (deltaX,deltaY)
+ */
+GAF.prototype.shift = function(deltaX,deltaY)
+{
+    console.log('Shifting GAF schematic by ('+deltaX+','+deltaY+') ...');
+    
+    // shift all objects
+    for (var i=0; i<this.objects.length; i++)
+    {
+        var obj = this.objects[i];
+        
+        // object has x1,y1,x2,y2
+        if ([GAF_OBJECT_LINE, GAF_OBJECT_NET, GAF_OBJECT_BUS, GAF_OBJECT_PIN].indexOf(obj.type) > -1)
+        {
+            obj.x1 += deltaX; obj.y1 += deltaY;
+            obj.x2 += deltaX; obj.y2 += deltaY;
+        }
+        
+        // object has x,y
+        else if ([GAF_OBJECT_PICTURE,GAF_OBJECT_BOX,GAF_OBJECT_TEXT,GAF_OBJECT_COMPONENT,GAF_OBJECT_ARC,GAF_OBJECT_CIRCLE].indexOf(obj.type) > -1)
+        {
+            obj.x += deltaX; obj.y += deltaY;
+        }
+
+        // invalid object type for shift        
+        else {
+            console.error('Failed to shfit object:');
+            console.error(obj);
+        }
+    }
+    
+    // adjust bounding box coordinates according to shift
+    this.minX += deltaX;
+    this.minY += deltaY;
+    this.maxX += deltaX;
+    this.maxY += deltaY;
+}
+
+/*
+ * Use min/max coordinates from import to shift model to (0,0)
+ */  
+GAF.prototype.crop = function()
+{
+    this.shift(-this.minX, -this.minY);
+}
 
 /*
  * Use jQuery to create an XML-like DOM element from this GAF object

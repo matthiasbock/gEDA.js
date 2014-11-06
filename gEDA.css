@@ -62,16 +62,18 @@ geda-schematic
  * and in a schematic
  */
  
-geda-component line.line,
-svg.schematic g.component line.line
+geda-component line.symbol,
+svg.schematic g.component line.symbol
 {
     stroke: black;
+    stroke-width: 10;
 }
 
 geda-component line.pin,
 svg.schematic g.component line.pin
 {
     stroke: red;
+    stroke-width: 10;
 }
 
 geda-component rect,
@@ -79,6 +81,7 @@ svg.schematic g.component rect
 {
     stroke: black;
     fill: white;
+    stroke-width: 10;
 }
 
 geda-component rect.ic,
@@ -86,6 +89,7 @@ svg.schematic g.component rect.ic
 {
     stroke: #800000;
     fill: #ffffb0;
+    stroke-width: 10;
 }
 
 svg.schematic line.wire
@@ -93,4 +97,5 @@ svg.schematic line.wire
     stroke: #000080;
     fill: transparent;
     stroke-linecap: round;
+    stroke-width: 10;
 }
