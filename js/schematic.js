@@ -136,6 +136,21 @@ Schematic.prototype.appendComponent = function(type, x, y, angle)
                         .attr('height', '700px');
     }
 
+    /*
+     * Append a bounding box
+     */
+    console.log(c);
+    var brect = c[0][0].getBBox(),
+        width = brect.width,
+        height = brect.height,
+        margin = 50;
+    c.append('svg:rect')
+        .attr('class','bbox')
+        .attr('x', 0-margin)
+        .attr('y', 0-margin)
+        .attr('width', width+2*margin)
+        .attr('height', height+2*margin);
+
     return c;
 }
 
