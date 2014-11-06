@@ -1,18 +1,11 @@
-This project aims to create a -based application to draw electrical circuit schematics and PCB layouts
-using the advantages of browser click, drap'n'drop, SVG, HTML5 and jQuery features.
+gEDA.js
+===============
 
-All web software is available under the terms and conditions of the GNU Affero GPL v3.
-All other code and content, which is created in this project, is likewise available
-under the terms and conditions of the GNU GPL v3 or the Creative Commons Attribution Share-Alike v3.
+Web-based electronic design (EDA). Draw electrical circuit schematics and PCB layouts in your web browser.
 
-Elements are designed as SVG e.g. in Inkscape, or using pixel formats like PNG or JPG.
-You can drag'n'drop elements on the canvas, arrange them,
-inter-connect them and export your schematic in SVG format.
+Free and open source software under the terms and conditions of the GNU Affero GPL v3.
 
-Prototype is the C/C++ based gEDA project.
-Also the gEDA/gaf (*.sch, *.sym) file formats shall be supported for import/export.
-Includes tools to import elements from QElectroTech project.
-Tools to auto-layout and export G-Code for board milling (CNC) machines
-as well as pick'n'place (board populating) machines shall be developed.
+You can use component libraries from gEDA or design new components in Inkscape.
+Support for Altium and Eagle files is planned.
 
-Contributors/contributions welcome!
+Contributors and git pull-requests are welcome!
