@@ -1,7 +1,16 @@
 
 numberOfSchematics = 0;
 
+round = function(number, divisor)
+{
+    return Math.round(number/divisor)*divisor;
+}
 
+/*
+ * For drag'n'drop event handler:
+ * Manipulate a g's transform attribute,
+ * such that the translate part of it get added to (dx,dy)
+ */
 translate = function(transform, dx, dy)
 {
     // use regular expression to parse the original values from transform attribute
@@ -17,6 +26,7 @@ translate = function(transform, dx, dy)
     if (parts != null && parts.length > 0)
         t += ' rotate('+parts[1]+')';
 
+//    return transform.replace(/translate\([^\)]+\)/, t);
     return t;
 }
 
@@ -59,6 +69,14 @@ Schematic = function(source) {
         .attr('id','viewport');
     if (svgpan)
         $('svg#'+this.name).svgPan('viewport', true, true, true, 0.8);
+    else {
+/*        this.viewport.call(
+            d3.behavior.drag().on("drag", function() {
+                var g = d3.select(this);
+                g.attr('transform', translate(g.attr('transform'), d3.event.dx, d3.event.dy));
+            })
+        ); */
+    }
 
     if (typeof source != 'undefined')
     {
@@ -241,8 +259,8 @@ Schematic.prototype.fromGAF = function(src)
     }
 
     // make sure, the model is within the borders of the viewport
-    this.viewport.style('width', gaf.maxX+100);
-    this.viewport.style('height', gaf.maxY+100);
+//    this.viewport.style('width', gaf.maxX+100);
+//    this.viewport.style('height', gaf.maxY+100);
     
     console.log('GAF schematic dimensions:');
     console.log('MinX: '+gaf.minX);

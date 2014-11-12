@@ -1,4 +1,7 @@
 
+// reserved word: undefined
+notDefined = 'undefined';
+
 /*
  * Register new HTML elements
  *
@@ -33,15 +36,26 @@ $.extend({
     },
 });
 
-$.getScript(INCLUDE_ROOT+'/d3.v3.js');
-svgpan = false;
+if (typeof d3 == notDefined)
+    $.getScript(INCLUDE_ROOT+'/d3.v3.js');
+
+svgpan = true;
 if (svgpan)
     $.getScript(INCLUDE_ROOT+'/jquery-svgpan.js');
 
-$.getScript(PARSER_ROOT+'/gaf.js');
+if (typeof GAF == notDefined)
+    $.getScript(PARSER_ROOT+'/gaf.js');
 
-$.getScript(SCRIPT_ROOT+'/schematic.js');
-$.getScript(SCRIPT_ROOT+'/library.js');
+if (typeof Schematic == notDefined)
+    $.getScript(SCRIPT_ROOT+'/schematic.js');
+
+if (typeof LibraryComponent == notDefined)
+    $.getScript(SCRIPT_ROOT+'/library.js');
+
+
+allRefsIncluded = false;
+//$('geda-component[src!=""]')...
+
 
 /*
  * Stall execution of main, until all dependencies are resolved
@@ -52,6 +66,7 @@ var handle = window.setInterval(function()
                                       && typeof GAF_Object != 'undefined'
                                       && typeof LibraryComponent != 'undefined'
                                       && typeof d3 != 'undefined'
+                                      && allRefsIncluded
                                       )
                                     {
                                         window.clearInterval(handle);
