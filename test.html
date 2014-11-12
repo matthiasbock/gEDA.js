@@ -1,0 +1,132 @@
+<html>
+
+<head>
+<script src="include/jquery.js"></script>
+<script src="gEDA.js"></script>
+</head>
+
+<body>
+
+Example schematic, a circuit with a battery, resistor and LED (GAF file created with GSchem):<br/>
+
+<!--
+gEDA/gaf is a FOSS format for schematics.
+It is used by the gEDA suite.
+Specification is available at http://wiki.geda-project.org/geda:file_format_spec
+Parser is at js/parsers/gaf.js
+
+gEDA.js will import the <geda-schematic> below and replace it with an SVG, rendering the contained schematic. 
+-->
+<geda-project>
+<geda-schematic format="application/gaf">
+v 20130925 2
+C 40000 40000 0 0 0 title-B.sym
+C 46900 47700 1 0 0 battery-1.sym
+{
+T 47200 48600 5 10 0 0 0 0 1
+device=BATTERY
+T 47200 48200 5 10 1 1 0 0 1
+refdes=B?
+T 47200 49000 5 10 0 0 0 0 1
+symversion=0.1
+}
+C 45800 46300 1 90 0 resistor-2.sym
+{
+T 45450 46700 5 10 0 0 90 0 1
+device=RESISTOR
+T 45500 46500 5 10 1 1 90 0 1
+refdes=R?
+}
+C 46900 44800 1 0 0 led-3.sym
+{
+T 47850 45450 5 10 0 0 0 0 1
+device=LED
+T 47350 45350 5 10 1 1 0 0 1
+refdes=D?
+}
+N 47600 47900 47800 47900 4
+N 47800 47900 47800 45000 4
+N 46900 45000 45700 45000 4
+N 45700 45000 45700 46300 4
+N 45700 47200 45700 47900 4
+N 45700 47900 46900 47900 4
+</geda-schematic>
+
+<geda-library>
+<geda-component component="battery-1.sym" format="application/gaf">
+v 20050820 1
+P 0 200 200 200 1 0 0
+{
+T 150 250 5 8 1 1 0 6 1
+pinnumber=1
+T 200 150 5 8 0 1 0 8 1
+pinseq=1
+T 200 200 9 8 0 1 0 0 1
+pinlabel=+
+T 350 200 5 8 0 1 0 2 1
+pintype=pwr
+}
+P 700 200 500 200 1 0 0
+{
+T 550 250 5 8 1 1 0 0 1
+pinnumber=2
+T 550 150 5 8 0 1 0 2 1
+pinseq=2
+T 500 200 9 8 0 1 0 6 1
+pinlabel=-
+T 350 200 5 8 0 1 0 8 1
+pintype=pwr
+}
+L 300 400 300 0 3 0 0 0 -1 -1
+L 400 300 400 100 3 0 0 0 -1 -1
+T 300 900 5 10 0 0 0 0 1
+device=BATTERY
+L 500 200 400 200 3 0 0 0 -1 -1
+L 200 200 300 200 3 0 0 0 -1 -1
+T 300 500 8 10 1 1 0 0 1
+refdes=B?
+T 300 1100 5 10 0 0 0 0 1
+description=Battery
+T 300 700 5 10 0 0 0 0 1
+numslots=0
+T 300 1300 5 10 0 0 0 0 1
+symversion=0.1
+</geda-component>
+<geda-component component="resistor-2.sym" format="application/gaf">
+v 20081221 2
+P 900 100 750 100 1 0 0
+{
+T 800 150 5 8 0 1 0 0 1
+pinnumber=2
+T 800 150 5 8 0 0 0 0 1
+pinseq=2
+T 800 150 5 8 0 1 0 0 1
+pinlabel=2
+T 800 150 5 8 0 1 0 0 1
+pintype=pas
+}
+P 0 100 150 100 1 0 0
+{
+T 100 150 5 8 0 1 0 0 1
+pinnumber=1
+T 100 150 5 8 0 0 0 0 1
+pinseq=1
+T 100 150 5 8 0 1 0 0 1
+pinlabel=1
+T 100 150 5 8 0 1 0 0 1
+pintype=pas
+}
+B 150 0 600 200 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
+T 400 350 5 10 0 0 0 0 1
+device=RESISTOR
+T 200 300 8 10 1 1 0 0 1
+refdes=R?
+</geda-component>
+<geda-component component="P1" src="https://github.com/matthiasbock/EDAdb/raw/symbols/RaspberryPi-rev2-P1.svg" format="image/svg+xml"/>
+</geda-library>
+
+</geda-project>
+
+</body>
+
+</html>
