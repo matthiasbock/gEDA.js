@@ -5,3 +5,4 @@ Bitswitcher-GPIO
 .settings
 *.*~
 sym
+*.sym
