@@ -295,7 +295,8 @@
 </package>
 
 <script>
-f = new EaglePackage().importjQuery( $('body > package').css('display','none') );
+f = new EaglePackage()
+    .importjQuery( $('body > package').css('display','none') );
 $('body')
     .append( f.exportSVG() );
 </script>

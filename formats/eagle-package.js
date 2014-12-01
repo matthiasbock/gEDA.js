@@ -25,7 +25,7 @@ EaglePackage = function(name)
  * with valid sub-element attributes
  */
 EaglePackageElements ={
-    'polygon':   [],
+    'polygon':   ['name','width','layer'],
 
     // <wire x1="-1.4" y1="-0.8" x2="-1.4" y2="0.8" width="0.127" layer="51"/>
     'wire':      ['x1','y1','x2','y2','width','layer'],
@@ -45,7 +45,8 @@ EaglePackageElements ={
     'hole':      [],
 
     // <pad name="4" x="1.25" y="2.71" drill="0.95" shape="octagon"/>
-    'pad':       ['name','x','y','drill','shape'],
+    // <pad name="8" x="8.89" y="0" drill="1.016" shape="long" rot="R90"/>
+    'pad':       ['name','x','y','drill','shape','rot'],
 
     // <smd name="16" x="-4.445" y="2.695" dx="0.635" dy="1.524" layer="1"/>
     'smd':       ['name','x','y','dx','dy','layer'],
@@ -197,9 +198,16 @@ EaglePackage.prototype.exportString = function(noSelfClosing)
 /*
  * How to draw SVG elements for each Eagle package sub-element
  */
+
+rot2transform = {
+    'R90':      'rotate(90)',
+    'R180':     'rotate(180)',
+    'R270':     'rotate(270)',
+};
+
 EagleRenderSVG = {
     'polygon':  function(polygon) {
-                    var result = '<path id="'+polygon.name+'" d="';
+                    var result = '<path class="polygon" layer="'+EagleLayers[polygon.layer]+'" d="';
                     for (var i=0; i<polygon.vertices.length; i++)
                         result += (i==0 ? 'M' : 'L')+EagleRenderSVG['vertex'](polygon.vertices[i]);
                     result += 'Z"/>';
@@ -218,7 +226,7 @@ EagleRenderSVG = {
                     return '';
                 },
     'circle':   function(circle) {
-                    return '<circle class="circle" layer="'+EagleLayers[circle.layer]+'" cx="'+circle.x+'" cy="'+circle.y+'" r="'+(parseFloat(circle.radius)+parseFloat(circle.width))+'" />';
+                    return '<circle class="circle" layer="'+EagleLayers[circle.layer]+'" cx="'+circle.x+'" cy="'+circle.y+'" r="'+(circle.radius+circle.width)+'" />';
                 },
     'rectangle':function(rectangle) {
                     return '<rect class="rectangle" layer="'+EagleLayers[rectangle.layer]+'" x="'+rectangle.x1+'" y="'+rectangle.y1+'" width="'+(rectangle.x2-rectangle.x1)+'" height="'+(rectangle.y2-rectangle.y1)+'"/>';
@@ -230,10 +238,31 @@ EagleRenderSVG = {
                     return '<circle class="hole" cx="'+hole.x+'px" cy="'+hole.y+'px" r="'+(hole.drill/2)+'px"/>';
                 },
     'pad':      function(pad) {
-                    return '';
+                    // SVG group
+                    // move into place using transform>translate,
+                    // so rotate can easily be applied
+                    var result = '<g class="pad" id="pad'+pad.name+'" transform="translate('+pad.x+','+pad.y+')';
+                    // rotate ?
+                    if (pad.rot != '')
+                        result += ' '+rot2transform[pad.rot]+'"';
+                    result += '">';
+
+                    // draw depending on specified pad shape
+                    if (pad.shape == 'long')
+                    {
+                        var diameter = pad.drill*5/3;
+                        var outerRadius = diameter/2;
+                        result += '<rect x="'+(-outerRadius)+'" y="'+(-outerRadius)+'" width="'+diameter+'" height="'+diameter+'"/>';
+                        result += '<circle cx="'+(-outerRadius)+'" cy="0" r="'+outerRadius+'"/>"';
+                        result += '<circle cx="'+outerRadius+'" cy="0" r="'+outerRadius+'"/>"';
+                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>"';
+                    }
+
+                    result += '</g>';
+                    return result;
                 },
     'smd':      function(smd) {
-                    return '<rect class="smd" id="'+smd.name+'" layer="'+EagleLayers[smd.layer]+'" x="'+(smd.x-(smd.dx/2))+'" y="'+(smd.y-(smd.dy/2))+'" width="'+smd.dx+'" height="'+smd.dy+'"/>';
+                    return '<rect class="smd" id="smd'+smd.name+'" layer="'+EagleLayers[smd.layer]+'" x="'+(smd.x-(smd.dx/2))+'" y="'+(smd.y-(smd.dy/2))+'" width="'+smd.dx+'" height="'+smd.dy+'"/>';
                 }
 };
 
@@ -242,8 +271,8 @@ EagleRenderSVG = {
  */
 EaglePackage.prototype.exportSVG = function()
 {
-    var svg = '<svg width="200" height="200">';
-    svg += '<g transform="translate(100,100) scale(10)">';
+    var svg = '<svg width="300" height="300">';
+    svg += '<g transform="translate(120,100) scale(10)">';
 
     for (key in this.elements)
     {

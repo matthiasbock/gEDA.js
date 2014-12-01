@@ -42,7 +42,15 @@ jParse = function(jElement, attributes)
     var result = {};
     for (var i=0; i<attributes.length; i++)
     {
-        result[attributes[i]] = jElement.attr(attributes[i]); 
+        var value = jElement.attr(attributes[i])
+        try {
+            result[attributes[i]] = parseFloat(value);
+            // fallback in case of failure without exception
+            if (isNaN(result[attributes[i]]))
+                result[attributes[i]] = value;
+        } catch (e) {
+            result[attributes[i]] = value;
+        }; 
     }
     return result;
 }

@@ -18,9 +18,18 @@ rect
 .circle[layer="tDocu"],
 .circle[layer="tPlace"],
 .rectangle[layer="tDocu"],
-.rectangle[layer="tPlace"]
+.rectangle[layer="tPlace"],
+.polygon[layer="tDocu"],
+.polygon[layer="tPlace"]
 {
     fill: #a5a5a5;
+}
+
+text[layer="tNames"],
+text[layer="tValues"]
+{
+    stroke: none;
+    fill: #555555;
 }
 
 /* holes are circles */
@@ -34,6 +43,12 @@ rect
 {
     stroke: none;
     fill: #4ba54b;
+}
+/* pad's drillhole */
+.pad .drill
+{
+    stroke: none;
+    fill: white;
 }
 
 /* smds are rects */
