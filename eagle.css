@@ -1,0 +1,36 @@
+
+.wire
+{
+    stroke: #44449e;
+    fill: none;
+}
+
+.hole
+{
+    stroke: none;
+    fill: black;
+}
+
+.pad
+{
+    stroke: none;
+    fill: #4ba54b;
+}
+
+.smd[layer="1"]
+{
+    stroke: none;
+    fill:   #a54b4b;
+}
+
+.smd[layer="16"]
+{
+    stroke: none;
+    fill:   #4b4ba5;
+}
+
+.via
+{
+    stroke: none;
+    fill: #ffff45;
+}

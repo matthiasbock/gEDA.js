@@ -4,20 +4,23 @@
 <script src="../include/jquery.js"></script>
 <script src="../js/common.js"></script>
 <script src="../formats/eagle-package.js"></script>
+<link rel="stylesheet" type="text/css" href="../eagle.css"/>
 </head>
 
 <body>
 <script>
-f = new EaglePackage();
+f = new EaglePackage('PG-TO247-3');
 var x=0, y=0, dimension=1.4;
-f.addHole(x, y, dimension);
+f.addPad(x, y, dimension);
 x += 5.44;
-f.addHole(x, y, dimension);
+f.addPad(x, y, dimension);
 x += 5.44;
-f.addHole(x, y, dimension);
+f.addPad(x, y, dimension);
 $('body')
     .append( f.exportjQuery() )
-    .append( escapeHTML(f.exportString()) );
+    .append( escapeHTML(f.exportString()) )
+    .append('<br/>')
+    .append( f.exportSVG() );
 </script>
 </body>
 
