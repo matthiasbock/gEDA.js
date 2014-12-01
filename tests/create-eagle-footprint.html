@@ -1,0 +1,24 @@
+<html>
+
+<head>
+<script src="../include/jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="../formats/eagle-package.js"></script>
+</head>
+
+<body>
+<script>
+f = new EaglePackage();
+var x=0, y=0, dimension=1.4;
+f.addHole(x, y, dimension);
+x += 5.44;
+f.addHole(x, y, dimension);
+x += 5.44;
+f.addHole(x, y, dimension);
+$('body')
+    .append( f.exportjQuery() )
+    .append( escapeHTML(f.exportString()) );
+</script>
+</body>
+
+</html>
