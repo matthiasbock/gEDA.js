@@ -11,11 +11,12 @@
 <script>
 f = new EaglePackage('PG-TO247-3');
 var x=0, y=0, dimension=1.4;
-f.addPad(x, y, dimension);
+f.add('pad', {'x':x, 'y':y, 'drill':dimension, 'shape':'square'});
 x += 5.44;
-f.addPad(x, y, dimension);
+f.add('pad', {'x':x, 'y':y, 'drill':dimension, 'shape':'octagon'});
 x += 5.44;
-f.addPad(x, y, dimension);
+f.add('pad', {'x':x, 'y':y, 'drill':dimension, 'shape':'round'});
+
 $('body')
     .append( f.exportjQuery() )
     .append( escapeHTML(f.exportString()) )

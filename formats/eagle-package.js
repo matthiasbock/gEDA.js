@@ -140,26 +140,9 @@ EaglePackage.prototype.importjQuery = function(jElement)
 /*
  * Add hole to current package
  */
-EaglePackage.prototype.addHole = function(x, y, drill)
+EaglePackage.prototype.add = function(name, attrs)
 {
-    this.elements['hole'].push(
-    {
-        'x':     x,
-        'y':     y,
-        'drill': drill
-    });
-}
-
-EaglePackage.prototype.addPad = function(name, x, y, drill, shape)
-{
-    this.elements['pad'].push(
-    {
-        'name':  name,
-        'x':     x,
-        'y':     y,
-        'drill': drill,
-        'shape': shape
-    });
+    this.elements[name].push(attrs);
 }
 
 /*
@@ -198,13 +181,6 @@ EaglePackage.prototype.exportString = function(noSelfClosing)
 /*
  * How to draw SVG elements for each Eagle package sub-element
  */
-
-rot2transform = {
-    'R90':      'rotate(90)',
-    'R180':     'rotate(180)',
-    'R270':     'rotate(270)',
-};
-
 EagleRenderSVG = {
     'polygon':  function(polygon) {
                     var result = '<path class="polygon" layer="'+EagleLayers[polygon.layer]+'" d="';
@@ -241,18 +217,46 @@ EagleRenderSVG = {
                     // SVG group
                     // move into place using transform>translate,
                     // so rotate can easily be applied
-                    var result = '<g class="pad" id="pad'+pad.name+'" transform="translate('+pad.x+','+pad.y+')';
+                    var result = '<g class="pad" '+(pad.name ? 'id="pad'+pad.name+'" ':'')+'transform="translate('+pad.x+','+pad.y+')';
                     // rotate ?
-                    if (pad.rot != '')
-                        result += ' '+rot2transform[pad.rot]+'"';
+                    if (pad.rot && pad.rot != '')
+                    {
+                        try {
+                            var angle = parseFloat(pad.rot.replace('R',''))
+                            if (angle && !isNaN(angle))
+                                result += ' rotate('+angle+')';
+                            else
+                                console.error('Rotation unsuccessful: '+pad.rot);
+                        } catch(e) {
+                            console.error('Rotation unsuccessful: '+pad.rot);
+                        }
+                    }
                     result += '">';
 
                     // draw depending on specified pad shape
-                    if (pad.shape == 'long')
+                    pad.shape = pad.shape.toLowerCase();
+                    if (pad.shape == 'square')
                     {
-                        var diameter = pad.drill*5/3;
-                        var outerRadius = diameter/2;
-                        result += '<rect x="'+(-outerRadius)+'" y="'+(-outerRadius)+'" width="'+diameter+'" height="'+diameter+'"/>';
+                        var outerDiameter = pad.drill*2, outerRadius = outerDiameter/2;
+                        result += '<rect x="'+(-outerRadius)+'" y="'+(-outerRadius)+'" width="'+outerDiameter+'" height="'+outerDiameter+'"/>';
+                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>';
+                    }
+                    else if (pad.shape == 'round')
+                    {
+                        var outerDiameter = pad.drill*2, outerRadius = outerDiameter/2;
+                        result += '<circle cx="0" cy="0" r="'+outerRadius+'"/>';
+                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>';
+                    }
+                    else if (pad.shape == 'octagon')
+                    {
+                        var outerDiameter = pad.drill*2, r = outerDiameter/2, a=r/3*2;
+                        result += '<path class="pad" d="m'+(-1/2*a)+','+(3/2*a)+' '+(-a)+','+(-a)+' 0,'+(-a)+' '+a+','+(-a)+' '+a+',0 '+a+','+a+' 0,'+a+' '+(-a)+','+a+' z"/>';
+                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>';
+                    }
+                    else if (pad.shape == 'long')
+                    {
+                        var outerDiameter = pad.drill*5/3, outerRadius = outerDiameter/2;
+                        result += '<rect x="'+(-outerRadius)+'" y="'+(-outerRadius)+'" width="'+outerDiameter+'" height="'+outerDiameter+'"/>';
                         result += '<circle cx="'+(-outerRadius)+'" cy="0" r="'+outerRadius+'"/>"';
                         result += '<circle cx="'+outerRadius+'" cy="0" r="'+outerRadius+'"/>"';
                         result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>"';
