@@ -179,98 +179,6 @@ EaglePackage.prototype.exportString = function(noSelfClosing)
 }
 
 /*
- * How to draw SVG elements for each Eagle package sub-element
- */
-EagleRenderSVG = {
-    'polygon':  function(polygon) {
-                    var result = '<path class="polygon" layer="'+EagleLayers[polygon.layer]+'" d="';
-                    for (var i=0; i<polygon.vertices.length; i++)
-                        result += (i==0 ? 'M' : 'L')+EagleRenderSVG['vertex'](polygon.vertices[i]);
-                    result += 'Z"/>';
-                    return result;
-                },
-    'vertex':   function(vertex) {
-                    return vertex.x+','+vertex.y;
-                },
-    'wire':     function(wire) {
-                    return '<line class="wire" layer="'+EagleLayers[wire.layer]+'" x1="'+wire.x1+'" y1="'+wire.y1+'" x2="'+wire.x2+'" y2="'+wire.y2+'" stroke-width="'+wire.width+'"/>';
-                },
-    'text':     function(text) {
-                    return '<text layer="'+EagleLayers[text.layer]+'" x="'+text.x+'" y="'+text.y+'" font-size="'+text.size+'">'+text.text+'</text>';
-                },
-    'dimension':function(dimension) {
-                    return '';
-                },
-    'circle':   function(circle) {
-                    return '<circle class="circle" layer="'+EagleLayers[circle.layer]+'" cx="'+circle.x+'" cy="'+circle.y+'" r="'+(circle.radius+circle.width)+'" />';
-                },
-    'rectangle':function(rectangle) {
-                    return '<rect class="rectangle" layer="'+EagleLayers[rectangle.layer]+'" x="'+rectangle.x1+'" y="'+rectangle.y1+'" width="'+(rectangle.x2-rectangle.x1)+'" height="'+(rectangle.y2-rectangle.y1)+'"/>';
-                },
-    'frame':    function(frame) {
-                    return '';
-                },
-    'hole':     function(hole) {
-                    return '<circle class="hole" cx="'+hole.x+'px" cy="'+hole.y+'px" r="'+(hole.drill/2)+'px"/>';
-                },
-    'pad':      function(pad) {
-                    // SVG group
-                    // move into place using transform>translate,
-                    // so rotate can easily be applied
-                    var result = '<g class="pad" '+(pad.name ? 'id="pad'+pad.name+'" ':'')+'transform="translate('+pad.x+','+pad.y+')';
-                    // rotate ?
-                    if (pad.rot && pad.rot != '')
-                    {
-                        try {
-                            var angle = parseFloat(pad.rot.replace('R',''))
-                            if (angle && !isNaN(angle))
-                                result += ' rotate('+angle+')';
-                            else
-                                console.error('Rotation unsuccessful: '+pad.rot);
-                        } catch(e) {
-                            console.error('Rotation unsuccessful: '+pad.rot);
-                        }
-                    }
-                    result += '">';
-
-                    // draw depending on specified pad shape
-                    pad.shape = pad.shape.toLowerCase();
-                    if (pad.shape == 'square')
-                    {
-                        var outerDiameter = pad.drill*2, outerRadius = outerDiameter/2;
-                        result += '<rect x="'+(-outerRadius)+'" y="'+(-outerRadius)+'" width="'+outerDiameter+'" height="'+outerDiameter+'"/>';
-                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>';
-                    }
-                    else if (pad.shape == 'round')
-                    {
-                        var outerDiameter = pad.drill*2, outerRadius = outerDiameter/2;
-                        result += '<circle cx="0" cy="0" r="'+outerRadius+'"/>';
-                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>';
-                    }
-                    else if (pad.shape == 'octagon')
-                    {
-                        var outerDiameter = pad.drill*2, r = outerDiameter/2, a=r/3*2;
-                        result += '<path class="pad" d="m'+(-1/2*a)+','+(3/2*a)+' '+(-a)+','+(-a)+' 0,'+(-a)+' '+a+','+(-a)+' '+a+',0 '+a+','+a+' 0,'+a+' '+(-a)+','+a+' z"/>';
-                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>';
-                    }
-                    else if (pad.shape == 'long')
-                    {
-                        var outerDiameter = pad.drill*5/3, outerRadius = outerDiameter/2;
-                        result += '<rect x="'+(-outerRadius)+'" y="'+(-outerRadius)+'" width="'+outerDiameter+'" height="'+outerDiameter+'"/>';
-                        result += '<circle cx="'+(-outerRadius)+'" cy="0" r="'+outerRadius+'"/>"';
-                        result += '<circle cx="'+outerRadius+'" cy="0" r="'+outerRadius+'"/>"';
-                        result += '<circle class="drill" cx="0" cy="0" r="'+(pad.drill/2)+'"/>"';
-                    }
-
-                    result += '</g>';
-                    return result;
-                },
-    'smd':      function(smd) {
-                    return '<rect class="smd" id="smd'+smd.name+'" layer="'+EagleLayers[smd.layer]+'" x="'+(smd.x-(smd.dx/2))+'" y="'+(smd.y-(smd.dy/2))+'" width="'+smd.dx+'" height="'+smd.dy+'"/>';
-                }
-};
-
-/*
  * Export package as Scalable Vector Graphic using jQuery
  */
 EaglePackage.prototype.exportSVG = function()
@@ -282,7 +190,7 @@ EaglePackage.prototype.exportSVG = function()
     {
         for (var i=0; i<this.elements[key].length; i++)
         {
-            svg += EagleRenderSVG[key]( this.elements[key][i] );
+            svg += EaglePackageRenderSVG[key]( this.elements[key][i] );
         }
     }
 

@@ -1,18 +1,17 @@
 
-line
-{
-    fill: none;
-}
-.wire[layer="tDocu"],
-.wire[layer="tPlace"]
-{
-    stroke: #a5a5a5;
-}
-
+line,
 circle,
 rect
 {
     stroke: none;
+    fill: none;
+}
+
+.wire,
+.wire[layer="tDocu"],
+.wire[layer="tPlace"]
+{
+    stroke: #a5a5a5;
 }
 
 .circle[layer="tDocu"],
@@ -30,6 +29,25 @@ text[layer="tValues"]
 {
     stroke: none;
     fill: #555555;
+}
+
+/* in the SVG pins are groups of lines and circles */
+.pin
+{
+    stroke-width: 0.2;
+}
+.pin line
+{
+    stroke: #a54b4b;
+    fill: none;
+}
+.pin circle
+{
+    stroke: #4ba54b;
+}
+.pin .function
+{
+    stroke: #a54b4b;
 }
 
 /* holes are circles */

@@ -4,5 +4,8 @@
 
 EagleLibrary = function()
 {
+    this.symbols    = [];
+    this.packages   = [];
+    this.devicesets = [];
 }
 

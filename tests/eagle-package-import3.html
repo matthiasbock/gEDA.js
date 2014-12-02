@@ -1,0 +1,54 @@
+<html>
+
+<head>
+<script src="../include/jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="../formats/eagle-layers.js"></script>
+<script src="../formats/eagle-package.js"></script>
+<link rel="stylesheet" type="text/css" href="../eagle.css"/>
+</head>
+
+<body>
+<package name="TS42">
+<wire x1="2.85" y1="-2" x2="2.85" y2="2" width="0.127" layer="21"/>
+<wire x1="-2.85" y1="2" x2="-2.85" y2="0.5" width="0.127" layer="21"/>
+<wire x1="-2.85" y1="-0.5" x2="-2.85" y2="-2" width="0.127" layer="21"/>
+<wire x1="-2.85" y1="0.5" x2="-3.1" y2="0.5" width="0.127" layer="21"/>
+<wire x1="-3.1" y1="0.5" x2="-3.1" y2="-0.5" width="0.127" layer="21"/>
+<wire x1="-3.1" y1="-0.5" x2="-2.85" y2="-0.5" width="0.127" layer="21"/>
+<wire x1="-1" y1="1.8" x2="1" y2="1.8" width="0.127" layer="21"/>
+<wire x1="1" y1="1.8" x2="1" y2="2" width="0.127" layer="21"/>
+<wire x1="1" y1="2" x2="1" y2="2.2" width="0.127" layer="21"/>
+<wire x1="1" y1="2.2" x2="-1" y2="2.2" width="0.127" layer="21"/>
+<wire x1="-1" y1="2.2" x2="-1" y2="2" width="0.127" layer="21"/>
+<wire x1="-1" y1="2" x2="-1" y2="1.8" width="0.127" layer="21"/>
+<wire x1="-1" y1="-2.2" x2="1" y2="-2.2" width="0.127" layer="21"/>
+<wire x1="1" y1="-2.2" x2="1" y2="-2" width="0.127" layer="21"/>
+<wire x1="1" y1="-2" x2="1" y2="-1.8" width="0.127" layer="21"/>
+<wire x1="1" y1="-1.8" x2="-1" y2="-1.8" width="0.127" layer="21"/>
+<wire x1="-1" y1="-1.8" x2="-1" y2="-2" width="0.127" layer="21"/>
+<wire x1="-1" y1="-2" x2="-1" y2="-2.2" width="0.127" layer="21"/>
+<wire x1="-2.85" y1="2" x2="-1" y2="2" width="0.127" layer="21"/>
+<wire x1="1" y1="2" x2="2.85" y2="2" width="0.127" layer="21"/>
+<wire x1="1" y1="-2" x2="2.85" y2="-2" width="0.127" layer="21"/>
+<wire x1="-1" y1="-2" x2="-2.85" y2="-2" width="0.127" layer="21"/>
+<circle x="0" y="0" radius="1.5" width="0.127" layer="21"/>
+<circle x="0" y="0" radius="1.2" width="0.127" layer="21"/>
+<smd name="3" x="-4.2" y="-2.25" dx="1.6" dy="1.4" layer="1" roundness="15"/>
+<smd name="4" x="4.2" y="-2.25" dx="1.6" dy="1.4" layer="1" roundness="15"/>
+<smd name="2" x="4.2" y="2.25" dx="1.6" dy="1.4" layer="1" roundness="15"/>
+<smd name="1" x="-4.2" y="2.25" dx="1.6" dy="1.4" layer="1" roundness="15"/>
+<smd name="5" x="-4.2" y="0" dx="1.6" dy="1.4" layer="1" roundness="15"/>
+<text x="-3" y="4" size="1.27" layer="21">&gt;VALUE</text>
+<text x="-3" y="-4.5" size="1.27" layer="21">&gt;NAME</text>
+</package>
+
+<script>
+f = new EaglePackage()
+    .importjQuery( $('body > package').css('display','none') );
+$('body')
+    .append( f.exportSVG() );
+</script>
+</body>
+
+</html>

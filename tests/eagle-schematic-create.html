@@ -1,0 +1,23 @@
+<html>
+
+<head>
+<script src="../include/jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="../formats/eagle-symbol.js"></script>
+<script src="../formats/eagle-schematic.js"></script>
+<link rel="stylesheet" type="text/css" href="../eagle.css"/>
+</head>
+
+<body>
+<script>
+sch = new EagleSchematic();
+
+$('body')
+    .append( sch.exportjQuery() )
+    .append( escapeHTML(sch.exportString()) )
+    .append('<br/>')
+    .append( sch.exportSVG() );
+</script>
+</body>
+
+</html>
