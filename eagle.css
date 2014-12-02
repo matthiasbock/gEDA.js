@@ -5,6 +5,7 @@ rect
 {
     stroke: none;
     fill: none;
+    opacity: 0.8;
 }
 
 .wire,
@@ -57,7 +58,8 @@ text[layer="tValues"]
 }
 
 /* lightgreen */
-.pad
+.pad rect,
+.pad circle
 {
     stroke: none;
     fill: #4ba54b;

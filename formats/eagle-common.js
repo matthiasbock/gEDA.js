@@ -74,7 +74,7 @@ EaglePackageRenderSVG = {
     'polygon':  function(polygon) {
                     var result = '<path class="polygon" layer="'+EagleLayers[polygon.layer]+'" d="';
                     for (var i=0; i<polygon.vertices.length; i++)
-                        result += (i==0 ? 'M' : 'L')+EagleRenderSVG['vertex'](polygon.vertices[i]);
+                        result += (i==0 ? 'M' : 'L')+EaglePackageRenderSVG['vertex'](polygon.vertices[i]);
                     result += 'Z"/>';
                     return result;
                 },

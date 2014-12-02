@@ -69,7 +69,18 @@ EagleSymbol.prototype.importjQuery = function(jElement)
         // in case of text, also parse the text
         if (name == 'text')
             result['text'] = element.html();
-        return result;
+        else if (name == 'polygon')
+        {
+            result.vertices = [];
+            element.children('vertex').each(function()
+            {
+                var self = $(this);
+                result.vertices.push({
+                    'x': self.attr('x'),
+                    'y': self.attr('y')
+                    });
+            });
+        }        return result;
     } 
 
     // Parse one by one ...
@@ -124,8 +135,8 @@ EagleSymbol.prototype.exportString = function(noSelfClosing)
  */
 EagleSymbol.prototype.exportSVG = function()
 {
-    var svg = '<svg width="300" height="300">';
-    svg += '<g transform="translate(120,100) scale(10)">';
+    var svg = '<svg width="1024" height="1024">';
+    svg += '<g transform="translate(500,500) scale(5)">';
 
     for (key in this.elements)
     {
